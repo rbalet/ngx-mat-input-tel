@@ -1,0 +1,32 @@
+@use '@angular/material' as mat;
+
+@include mat.elevation-classes();
+@include mat.app-background();
+
+$theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$violet-palette,
+    ),
+    typography: (
+      brand-family: 'Roboto',
+      bold-weight: 900,
+    ),
+    density: (
+      scale: -1,
+    ),
+  )
+);
+
+html {
+  @include mat.all-component-themes($theme);
+
+  @include mat.elevation-classes();
+  @include mat.app-background();
+
+  // Somehow fix the menu not showing
+  .mat-mdc-menu-panel {
+    height: fit-content;
+  }
+}

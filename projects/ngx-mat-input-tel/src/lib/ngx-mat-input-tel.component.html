@@ -1,0 +1,118 @@
+<div class="ngx-mat-input-tel-container">
+  <button
+    type="button"
+    matRipple
+    [matMenuTriggerFor]="menu"
+    class="country-selector"
+    [disabled]="disabled"
+    (menuOpened)="menuSearchInput?.nativeElement?.focus()"
+  >
+    <span class="country-selector-flag flag" [ngClass]="$selectedCountry().flagClass"></span>
+
+    @if ($selectedCountry().dialCode) {
+      <span class="country-selector-code">+{{ $selectedCountry().dialCode }}</span>
+    }
+  </button>
+
+  <mat-menu
+    #menu="matMenu"
+    class="ngx-mat-input-tel-overlay-pane"
+    [backdropClass]="'ngx-mat-input-tel-overlay-backdrop'"
+  >
+    @if (enableSearch) {
+      <input
+        #menuSearchInput
+        class="country-search"
+        [(ngModel)]="searchCriteria"
+        type="text"
+        [placeholder]="searchPlaceholder"
+        (click)="$event.stopPropagation()"
+        style="
+          width: calc(100% - 4px);
+          height: 34px;
+          border-top: none;
+          border-right: none;
+          border-left: none;
+          border-image: initial;
+          border-bottom: 1px solid rgb(221, 221, 221);
+          font-size: 14px;
+          padding: 20px 10px 24px;
+          box-sizing: border-box;
+          background: transparent;
+          margin: 2px;
+        "
+      />
+    }
+    @for (country of preferredCountriesInDropDown; track $index) {
+      <button
+        type="button"
+        mat-menu-item
+        class="country-list-button"
+        (click)="onCountrySelect(country, focusable)"
+      >
+        <div class="icon-wrapper">
+          <div class="flag" [ngClass]="country.flagClass"></div>
+        </div>
+        <div class="label-wrapper">
+          {{ country.name }}
+
+          @if (country?.dialCode) {
+            <span [style]="!searchCriteria ? 'white-space: nowrap' : ''"
+              >+{{ country.dialCode }}
+
+              @if (country.areaCodes) {
+                {{ country.areaCodes.join(', ') }}
+              }
+            </span>
+          }
+        </div>
+      </button>
+    }
+    @if (preferredCountriesInDropDown.length) {
+      <mat-divider></mat-divider>
+    }
+    @for (country of allCountries | search: searchCriteria; track $index) {
+      <button
+        type="button"
+        mat-menu-item
+        class="country-list-button"
+        (click)="onCountrySelect(country, focusable)"
+      >
+        <div class="icon-wrapper">
+          <div class="flag" [ngClass]="country.flagClass"></div>
+        </div>
+        <div class="label-wrapper">
+          {{ country.name }}
+
+          @if (country?.dialCode) {
+            <span [style]="!searchCriteria ? 'white-space: nowrap' : ''"
+              >+{{ country.dialCode }}
+
+              @if (country.areaCodes) {
+                {{ country.areaCodes.join(', ') }}
+              }
+            </span>
+          }
+        </div>
+      </button>
+    }
+  </mat-menu>
+
+  <input
+    class="ngx-mat-input-tel-input"
+    matInput
+    type="tel"
+    inputmode="tel"
+    [autocomplete]="autocomplete"
+    [ngClass]="cssClass"
+    (blur)="onTouched()"
+    (keypress)="onInputKeyPress($event)"
+    [(ngModel)]="phoneNumber"
+    (ngModelChange)="onPhoneNumberChange()"
+    [errorStateMatcher]="errorStateMatcher"
+    [placeholder]="placeholder || $selectedCountry().placeHolder || ''"
+    [disabled]="disabled"
+    #focusable
+    [maxlength]="maxLength"
+  />
+</div>
