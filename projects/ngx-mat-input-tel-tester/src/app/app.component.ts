@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { AfterViewInit, Component, ViewChild } from '@angular/core'
+import { AfterViewInit, Component, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDividerModule } from '@angular/material/divider'
@@ -40,8 +40,6 @@ interface ProfileForm {
   ],
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild(NgxMatInputTelComponent) phoneInput: NgxMatInputTelComponent | undefined
-
   phoneForm = new FormGroup<PhoneForm>({
     phone: new FormControl(null, [Validators.required, Validators.maxLength(12)]),
   })
@@ -50,10 +48,17 @@ export class AppComponent implements AfterViewInit {
     phone: new FormControl(null),
   })
 
-  constructor() {}
+  $onlyCountries = signal(['us', 'cl', 've'])
+
+  constructor() {
+    setTimeout(() => {
+      // Fake onlyCountries change
+      this.$onlyCountries.set(['us', 'cl'])
+    }, 1000)
+  }
 
   onSubmit() {
-    console.log('onSubmit', this.phoneForm)
+    this.phoneForm.markAllAsTouched()
   }
 
   onReset() {
@@ -61,10 +66,6 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.phoneInput && this.phoneInput.matMenu) {
-      this.phoneInput.matMenu.panelClass = 'custom-panel'
-    }
-
     this.phoneForm.valueChanges.subscribe((value) => {
       // Only emitting correct number
       console.log('phoneForm.valueChanges', value)

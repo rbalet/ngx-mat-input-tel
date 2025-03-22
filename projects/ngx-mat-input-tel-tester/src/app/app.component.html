@@ -65,7 +65,7 @@
       <ngx-mat-input-tel
         [cssClass]="'custom'"
         [preferredCountries]="['cl', 've']"
-        [onlyCountries]="['us', 'cl', 've']"
+        [onlyCountries]="$onlyCountries()"
         [searchPlaceholder]="'Buscar...'"
         [formControl]="profileForm.controls.phone"
         resetOnChange

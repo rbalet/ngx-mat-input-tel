@@ -43,7 +43,7 @@
         "
       />
     }
-    @for (country of preferredCountriesInDropDown; track $index) {
+    @for (country of $preferredCountriesInDropDown(); track $index) {
       <button
         type="button"
         mat-menu-item
@@ -68,10 +68,10 @@
         </div>
       </button>
     }
-    @if (preferredCountriesInDropDown.length) {
+    @if ($preferredCountriesInDropDown().length) {
       <mat-divider></mat-divider>
     }
-    @for (country of allCountries | search: searchCriteria; track $index) {
+    @for (country of $availableCountries() | search: searchCriteria; track $index) {
       <button
         type="button"
         mat-menu-item
