@@ -37,6 +37,7 @@ import { MatMenu, MatMenuModule } from '@angular/material/menu'
 import {
   AsYouType,
   CountryCode as CC,
+  CountryCode,
   E164Number,
   NationalNumber,
   PhoneNumber,
@@ -104,10 +105,11 @@ export class NgxMatInputTelComponent
 
   @Input() autocomplete: 'off' | 'tel' = 'off'
   @Input() cssClass?: string
+  @Input() defaultCountry?: CountryCode
   @Input() errorStateMatcher: ErrorStateMatcher = this._defaultErrorStateMatcher
-  @Input() placeholder: string = ''
   @Input() maxLength: string | number = 15
   @Input() name?: string
+  @Input() placeholder: string = ''
   @Input() preferredCountries: string[] = []
 
   private _onlyCountries: string[] = []
@@ -248,6 +250,8 @@ export class NgxMatInputTelComponent
     if (this.numberInstance?.country) {
       // If an existing number is present, we use it to determine country
       country = this.getCountry(this.numberInstance.country)
+    } else if (this.defaultCountry) {
+      country = this.getCountry(this.defaultCountry)
     } else if (this.$preferredCountriesInDropDown().length) {
       country = this.$preferredCountriesInDropDown()[0]
     } else {
