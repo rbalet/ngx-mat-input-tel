@@ -112,13 +112,10 @@ export class NgxMatInputTelComponent
   @Input() placeholder: string = ''
   @Input() preferredCountries: string[] = []
 
-  private _onlyCountries: string[] = []
-  @Input() set onlyCountries(countries: string[]) {
-    this._onlyCountries = countries
-    if (this._onlyCountries.length)
-      this.$availableCountries.set(
-        this._allCountries.filter((c) => this._onlyCountries.includes(c.iso2)),
-      )
+  @Input() set onlyCountries(countryCodes: string[]) {
+    if (countryCodes.length) {
+      this.$availableCountries.set(this._getFilteredCountries(countryCodes))
+    }
 
     this._setDefaultCountry()
     this._setPreferredCountriesInDropDown()
@@ -218,13 +215,25 @@ export class NgxMatInputTelComponent
     this.stateChanges.next()
   }
 
-  private _setPreferredCountriesInDropDown(
-    availableCountries = this.$availableCountries(),
-    countries = this.preferredCountries,
-  ) {
-    this.$preferredCountriesInDropDown.set(
-      availableCountries.filter((c) => countries.includes(c.iso2)) || [],
-    )
+  ngOnDestroy() {
+    this.stateChanges.complete()
+    this._focusMonitor.stopMonitoring(this._elementRef)
+  }
+
+  ngDoCheck(): void {
+    if (this.ngControl) {
+      const oldState = this.errorState
+      const newState = this.errorStateMatcher.isErrorState(this.ngControl.control, this._parentForm)
+
+      this.errorState =
+        (newState && (!this.ngControl.control?.value || this.ngControl.control?.touched)) ||
+        (!this.focused ? newState : false)
+
+      if (oldState !== newState) {
+        this.errorState = newState
+        this.stateChanges.next()
+      }
+    }
   }
 
   updateErrorState() {
@@ -244,6 +253,13 @@ export class NgxMatInputTelComponent
     }
   }
 
+  private _setPreferredCountriesInDropDown(
+    availableCountries = this.$availableCountries(),
+    countries = this.preferredCountries,
+  ) {
+    this.$preferredCountriesInDropDown.set(this._getFilteredCountries(countries))
+  }
+
   private _setDefaultCountry() {
     let country: Country
 
@@ -261,25 +277,12 @@ export class NgxMatInputTelComponent
     this.countryChanged.emit(country)
   }
 
-  ngDoCheck(): void {
-    if (this.ngControl) {
-      const oldState = this.errorState
-      const newState = this.errorStateMatcher.isErrorState(this.ngControl.control, this._parentForm)
+  private _getFilteredCountries(countryCodes: string[]) {
+    const filteredCountries = this._allCountries.filter((c) => countryCodes.includes(c.iso2))
 
-      this.errorState =
-        (newState && (!this.ngControl.control?.value || this.ngControl.control?.touched)) ||
-        (!this.focused ? newState : false)
-
-      if (oldState !== newState) {
-        this.errorState = newState
-        this.stateChanges.next()
-      }
-    }
-  }
-
-  ngOnDestroy() {
-    this.stateChanges.complete()
-    this._focusMonitor.stopMonitoring(this._elementRef)
+    return filteredCountries.sort(
+      (a, b) => countryCodes.indexOf(a.iso2) - countryCodes.indexOf(b.iso2),
+    )
   }
 
   public onPhoneNumberChange(): void {
