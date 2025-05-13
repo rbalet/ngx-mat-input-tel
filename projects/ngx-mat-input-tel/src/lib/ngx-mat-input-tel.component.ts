@@ -117,8 +117,8 @@ export class NgxMatInputTelComponent
       this.$availableCountries.set(this._getFilteredCountries(countryCodes))
     }
 
-    this._setDefaultCountry()
     this._setPreferredCountriesInDropDown()
+    this._setDefaultCountry()
   }
 
   @Input() searchPlaceholder = 'Search ...'
@@ -208,8 +208,8 @@ export class NgxMatInputTelComponent
   }
 
   ngOnInit() {
-    this._setDefaultCountry()
     this._setPreferredCountriesInDropDown()
+    this._setDefaultCountry()
 
     this._changeDetectorRef.markForCheck()
     this.stateChanges.next()
@@ -253,10 +253,7 @@ export class NgxMatInputTelComponent
     }
   }
 
-  private _setPreferredCountriesInDropDown(
-    availableCountries = this.$availableCountries(),
-    countries = this.preferredCountries,
-  ) {
+  private _setPreferredCountriesInDropDown(countries = this.preferredCountries) {
     this.$preferredCountriesInDropDown.set(this._getFilteredCountries(countries))
   }
 
