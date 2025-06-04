@@ -17,15 +17,21 @@
         maxLength="20"
       ></ngx-mat-input-tel>
       <mat-hint>e.g. {{ phone.$selectedCountry().placeHolder }}</mat-hint>
-      <mat-error *ngIf="phoneForm.controls.phone.errors?.required"> Required Field </mat-error>
-      <mat-error *ngIf="f.submitted && phoneForm.controls.phone.errors?.validatePhoneNumber">
-        Invalid Number
-      </mat-error>
-      <mat-error *ngIf="phoneForm.controls.phone.errors?.maxlength">
-        Length:{{ phoneForm.controls.phone.errors?.maxlength.actualLength }}/{{
+      @if (phoneForm.controls.phone.errors?.required) {
+        <mat-error> Required Field </mat-error>
+      }
+      @if (f.submitted && phoneForm.controls.phone.errors?.validatePhoneNumber) {
+        <mat-error>
+          Invalid Number
+        </mat-error>
+      }
+      @if (phoneForm.controls.phone.errors?.maxlength) {
+        <mat-error>
+          Length:{{ phoneForm.controls.phone.errors?.maxlength.actualLength }}/{{
           phoneForm.controls.phone.errors?.maxlength.requiredLength
-        }}
-      </mat-error>
+          }}
+        </mat-error>
+      }
     </mat-form-field>
 
     <div class="buttons-container">
@@ -53,9 +59,11 @@
   </div>
   <div>
     <strong>Form validation errors:</strong>
-    <pre *ngFor="let control of phoneForm.controls | keyvalue">
-      {{ control.key }}: {{ control.value.errors | json }}
-    </pre>
+    @for (control of phoneForm.controls | keyvalue; track control) {
+      <pre>
+        {{ control.key }}: {{ control.value.errors | json }}
+      </pre>
+    }
   </div>
 
   <mat-divider></mat-divider>
@@ -76,10 +84,14 @@
       ></ngx-mat-input-tel>
       <mat-label>Phone</mat-label>
       <mat-hint>e.g. {{ phone1.$selectedCountry().placeHolder }}</mat-hint>
-      <mat-error *ngIf="profileForm.controls.phone.errors?.required"> Required Field </mat-error>
-      <mat-error *ngIf="profileForm.controls.phone.errors?.validatePhoneNumber">
-        Invalid Number
-      </mat-error>
+      @if (profileForm.controls.phone.errors?.required) {
+        <mat-error> Required Field </mat-error>
+      }
+      @if (profileForm.controls.phone.errors?.validatePhoneNumber) {
+        <mat-error>
+          Invalid Number
+        </mat-error>
+      }
     </mat-form-field>
   </form>
 

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { AfterViewInit, Component, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -23,7 +22,6 @@ interface ProfileForm {
   styleUrls: ['./app.component.scss'],
   imports: [
     BrowserModule,
-    CommonModule,
     BrowserAnimationsModule,
 
     // Forms
