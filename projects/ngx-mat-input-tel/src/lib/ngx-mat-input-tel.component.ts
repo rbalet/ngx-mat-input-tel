@@ -48,6 +48,7 @@ import { Subject } from 'rxjs'
 import { ALL_COUNTRIES, EXAMPLES } from './data/country-code.const'
 import { Country } from './model/country.model'
 import { PhoneNumberFormat } from './model/phone-number-format.model'
+import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag.component'
 import { ngxMatInputTelValidator } from './ngx-mat-input-tel.validator'
 import { SearchPipe } from './search.pipe'
 
@@ -75,14 +76,20 @@ class ngxMatInputTelBase {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgClass,
+
     // Forms
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
+
     // Mat
     MatMenuModule,
     MatRippleModule,
     MatDividerModule,
+
+    // Components
+    NgxMatInputTelFlagComponent,
+
     // Pipes
     SearchPipe,
   ],

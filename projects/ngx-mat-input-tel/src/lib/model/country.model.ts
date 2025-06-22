@@ -1,9 +1,13 @@
-export interface Country {
+export interface CountryFlag {
+  flagClass: string
+  dialCode: string
+  name?: string
+  areaCodes?: string[]
+}
+
+export interface Country extends CountryFlag {
   name: string
   iso2: string
-  dialCode: string
   priority: number
-  areaCodes?: string[]
-  flagClass: string
   placeHolder?: string
 }

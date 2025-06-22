@@ -7,11 +7,13 @@
     [disabled]="disabled"
     (menuOpened)="menuSearchInput?.nativeElement?.focus()"
   >
-    <span class="country-selector-flag flag" [ngClass]="$selectedCountry().flagClass"></span>
-
-    @if ($selectedCountry().dialCode) {
-      <span class="country-selector-code">+{{ $selectedCountry().dialCode }}</span>
-    }
+    <ngx-mat-input-tel-flag
+      class="main-flag"
+      [country]="{
+        flagClass: $selectedCountry().flagClass,
+        dialCode: $selectedCountry().dialCode,
+      }"
+    ></ngx-mat-input-tel-flag>
   </button>
 
   <mat-menu
@@ -50,22 +52,7 @@
         class="country-list-button"
         (click)="onCountrySelect(country, focusable)"
       >
-        <div class="icon-wrapper">
-          <div class="flag" [ngClass]="country.flagClass"></div>
-        </div>
-        <div class="label-wrapper">
-          {{ country.name }}
-
-          @if (country?.dialCode) {
-            <span [style]="!searchCriteria ? 'white-space: nowrap' : ''"
-              >+{{ country.dialCode }}
-
-              @if (country.areaCodes) {
-                {{ country.areaCodes.join(', ') }}
-              }
-            </span>
-          }
-        </div>
+        <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
       </button>
     }
     @if ($preferredCountriesInDropDown().length) {
@@ -78,22 +65,7 @@
         class="country-list-button"
         (click)="onCountrySelect(country, focusable)"
       >
-        <div class="icon-wrapper">
-          <div class="flag" [ngClass]="country.flagClass"></div>
-        </div>
-        <div class="label-wrapper">
-          {{ country.name }}
-
-          @if (country?.dialCode) {
-            <span [style]="!searchCriteria ? 'white-space: nowrap' : ''"
-              >+{{ country.dialCode }}
-
-              @if (country.areaCodes) {
-                {{ country.areaCodes.join(', ') }}
-              }
-            </span>
-          }
-        </div>
+        <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
       </button>
     }
   </mat-menu>
