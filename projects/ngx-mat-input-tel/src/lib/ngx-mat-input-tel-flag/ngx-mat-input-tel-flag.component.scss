@@ -1,6 +1,7 @@
 :host {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 4px;
 
   .menu-flag {
@@ -288,5 +289,9 @@
         background-position: 0 $flag-position;
       }
     }
+  }
+
+  .country-selector-name {
+    flex-grow: 1;
   }
 }

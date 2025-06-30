@@ -8,7 +8,7 @@ import { CountryFlag } from '../model/country.model'
   template: `<div class="flag" [ngClass]="country.flagClass"></div>
 
     @if (country.name) {
-      {{ country.name }}
+      <span class="country-selector-name">{{ country.name }}</span>
     }
 
     @if (country.dialCode) {
