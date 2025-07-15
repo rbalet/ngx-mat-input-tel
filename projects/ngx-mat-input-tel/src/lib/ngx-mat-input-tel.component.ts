@@ -2,6 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y'
 import { coerceBooleanProperty } from '@angular/cdk/coercion'
 import { NgClass } from '@angular/common'
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -96,7 +97,7 @@ class ngxMatInputTelBase {
 })
 export class NgxMatInputTelComponent
   extends ngxMatInputTelBase
-  implements OnInit, DoCheck, OnDestroy
+  implements OnInit, DoCheck, OnDestroy, AfterViewChecked
 {
   static nextId = 0
   @ViewChild(MatMenu) matMenu!: MatMenu
@@ -241,6 +242,10 @@ export class NgxMatInputTelComponent
         this.stateChanges.next()
       }
     }
+  }
+
+  ngAfterViewChecked() {
+    this.menuSearchInput?.nativeElement.focus();
   }
 
   updateErrorState() {
