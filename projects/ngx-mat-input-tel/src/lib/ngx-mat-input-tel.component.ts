@@ -191,8 +191,6 @@ export class NgxMatInputTelComponent
 
   private errorState?: boolean
 
-  @ViewChild('menuSearchInput') inputEl!: ElementRef<HTMLInputElement>;
-
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _focusMonitor: FocusMonitor,
@@ -247,7 +245,7 @@ export class NgxMatInputTelComponent
   }
 
   ngAfterViewChecked() {
-    this.inputEl?.nativeElement.focus();
+    this.menuSearchInput?.nativeElement.focus();
   }
 
   updateErrorState() {
