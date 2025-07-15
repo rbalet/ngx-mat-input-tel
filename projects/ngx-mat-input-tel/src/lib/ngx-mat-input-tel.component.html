@@ -5,7 +5,7 @@
     [matMenuTriggerFor]="menu"
     class="country-selector"
     [disabled]="disabled"
-    (menuOpened)="menuSearchInput?.nativeElement?.focus()"
+    (menuOpened)="onMenuOpened()"
   >
     <ngx-mat-input-tel-flag
       class="main-flag"
@@ -50,7 +50,7 @@
         type="button"
         mat-menu-item
         class="country-list-button"
-        (click)="onCountrySelect(country, focusable)"
+        (click)="onCountrySelect(country)"
       >
         <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
       </button>
@@ -63,7 +63,7 @@
         type="button"
         mat-menu-item
         class="country-list-button"
-        (click)="onCountrySelect(country, focusable)"
+        (click)="onCountrySelect(country)"
       >
         <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
       </button>

@@ -2,7 +2,6 @@ import { FocusMonitor } from '@angular/cdk/a11y'
 import { coerceBooleanProperty } from '@angular/cdk/coercion'
 import { NgClass } from '@angular/common'
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -97,7 +96,7 @@ class ngxMatInputTelBase {
 })
 export class NgxMatInputTelComponent
   extends ngxMatInputTelBase
-  implements OnInit, DoCheck, OnDestroy, AfterViewChecked
+  implements OnInit, DoCheck, OnDestroy
 {
   static nextId = 0
   @ViewChild(MatMenu) matMenu!: MatMenu
@@ -244,8 +243,8 @@ export class NgxMatInputTelComponent
     }
   }
 
-  ngAfterViewChecked() {
-    this.menuSearchInput?.nativeElement.focus();
+  onMenuOpened() {
+    this.menuSearchInput?.nativeElement?.focus()
   }
 
   updateErrorState() {
@@ -343,7 +342,7 @@ export class NgxMatInputTelComponent
     }
   }
 
-  public onCountrySelect(country: Country, el: HTMLInputElement): void {
+  public onCountrySelect(country: Country): void {
     if (this.phoneNumber) {
       this.phoneNumber = this.numberInstance?.nationalNumber
     }
@@ -355,7 +354,10 @@ export class NgxMatInputTelComponent
     this.countryChanged.emit(this.$selectedCountry())
 
     this.onPhoneNumberChange()
-    el.focus()
+
+    setTimeout(() => {
+      this.focusable.nativeElement.focus()
+    }, 0)
   }
 
   public getCountry(code: CC): Country {
