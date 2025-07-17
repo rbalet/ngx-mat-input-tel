@@ -506,4 +506,10 @@ export class NgxMatInputTelComponent
     }
     this._previousFormattedNumber = this.phoneNumber.toString()
   }
+
+  onSearchInputChange(): void {
+    setTimeout(() => {
+      this.menuSearchInput?.nativeElement.focus();
+    }, 200);
+  }
 }
