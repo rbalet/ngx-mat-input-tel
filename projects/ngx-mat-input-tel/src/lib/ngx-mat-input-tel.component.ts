@@ -116,7 +116,7 @@ export class NgxMatInputTelComponent
   @Input() errorStateMatcher: ErrorStateMatcher = this._defaultErrorStateMatcher
   @Input() maxLength: string | number = 15
   @Input() name?: string
-  @Input() placeholder: string = ''
+  @Input() placeholder = ''
   @Input() preferredCountries: string[] = []
 
   @Input() set onlyCountries(countryCodes: string[]) {
@@ -154,7 +154,7 @@ export class NgxMatInputTelComponent
   }
 
   private _disabled = false
-  @Input({ alias: 'disabled', transform: booleanAttribute })
+  @Input({ transform: booleanAttribute })
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value)
     this.stateChanges.next(undefined)
@@ -296,7 +296,7 @@ export class NgxMatInputTelComponent
   public onPhoneNumberChange(): void {
     try {
       this._setCountry()
-    } catch (e) {
+    } catch {
       // Pass a value to trigger the validator error
       this.value = this.formattedPhoneNumber().toString()
     }
@@ -505,5 +505,11 @@ export class NgxMatInputTelComponent
       this.phoneNumber = asYouType.input(this.phoneNumber.toString()) as E164Number | NationalNumber
     }
     this._previousFormattedNumber = this.phoneNumber.toString()
+  }
+
+  onSearchInputChange(): void {
+    setTimeout(() => {
+      this.menuSearchInput?.nativeElement.focus()
+    }, 200)
   }
 }

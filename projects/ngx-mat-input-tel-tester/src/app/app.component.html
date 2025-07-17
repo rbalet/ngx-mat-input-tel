@@ -21,14 +21,12 @@
         <mat-error> Required Field </mat-error>
       }
       @if (f.submitted && phoneForm.controls.phone.errors?.validatePhoneNumber) {
-        <mat-error>
-          Invalid Number
-        </mat-error>
+        <mat-error> Invalid Number </mat-error>
       }
       @if (phoneForm.controls.phone.errors?.maxlength) {
         <mat-error>
           Length:{{ phoneForm.controls.phone.errors?.maxlength.actualLength }}/{{
-          phoneForm.controls.phone.errors?.maxlength.requiredLength
+            phoneForm.controls.phone.errors?.maxlength.requiredLength
           }}
         </mat-error>
       }
@@ -88,9 +86,7 @@
         <mat-error> Required Field </mat-error>
       }
       @if (profileForm.controls.phone.errors?.validatePhoneNumber) {
-        <mat-error>
-          Invalid Number
-        </mat-error>
+        <mat-error> Invalid Number </mat-error>
       }
     </mat-form-field>
   </form>

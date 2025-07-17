@@ -9,6 +9,7 @@ export const ngxMatInputTelValidator = (control: AbstractControl): ValidationErr
     try {
       numberInstance = parsePhoneNumber(control.value)
     } catch (e) {
+      console.error(e)
       return error
     }
 

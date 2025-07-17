@@ -13,20 +13,11 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["ES2022", "dom"],
     "paths": {
-      "ngx-mat-input-tel": [
-        "dist/ngx-mat-input-tel"
-      ],
-      "ngx-mat-input-tel/*": [
-        "dist/ngx-mat-input-tel/*"
-      ]
+      "ngx-mat-input-tel": ["dist/ngx-mat-input-tel"],
+      "ngx-mat-input-tel/*": ["dist/ngx-mat-input-tel/*"]
     }
   },
   "angularCompilerOptions": {

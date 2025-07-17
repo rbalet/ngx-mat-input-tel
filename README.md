@@ -1,4 +1,5 @@
 # International Telephone Input for Angular Material (ngxMatInputTel)
+
 An Angular Material package for entering and validating international telephone numbers. It adds a flag dropdown to any input, detects the user's country, displays a relevant placeholder and provides formatting/validation methods.
 
 [![npm version](https://img.shields.io/npm/v/ngx-mat-input-tel.svg)](https://www.npmjs.com/package/ngx-mat-input-tel)
@@ -7,18 +8,20 @@ An Angular Material package for entering and validating international telephone 
 ![npm](https://img.shields.io/npm/dm/ngx-mat-input-tel)
 
 ## Demo
+
 - https://stackblitz.com/~/github.com/rbalet/ngx-mat-input-tel
 
 ## Caution
+
 This is a fork from the [ngx-mat-intl-tel-input](https://github.com/tanansatpal/ngx-mat-intl-tel-input) library whish does not seems to be maintained anymore. _Last commit is over a year_
 
 **Supports:**
 
- | Angular | ngx-mat-input-tel |
- | ------- | ----------------- |
- | >= 18   | >= 19.2.0         |
- | >= 15   | < 19.2.0          |
- 
+| Angular | ngx-mat-input-tel |
+| ------- | ----------------- |
+| >= 18   | >= 19.2.0         |
+| >= 15   | < 19.2.0          |
+
 - Validation with [libphonenumber-js](https://github.com/catamphetamine/libphonenumber-js)
 
 ## Installation
@@ -38,7 +41,7 @@ This is a fork from the [ngx-mat-intl-tel-input](https://github.com/tanansatpal/
 Add `NgxMatInputTelComponent` to your component file:
 
 ```ts
-imports: [NgxMatInputTelComponent];
+imports: [NgxMatInputTelComponent]
 ```
 
 ## Example
@@ -87,9 +90,7 @@ If you want to show the sample number for the country selected or errors , use m
     #phone
   ></ngx-mat-input-tel>
   <mat-hint>e.g. {{phone.selectedCountry.placeHolder}}</mat-hint>
-  <mat-error *ngIf="f.form.controls['phone']?.errors?.required"
-    >Required Field</mat-error
-  >
+  <mat-error *ngIf="f.form.controls['phone']?.errors?.required">Required Field</mat-error>
   <mat-error *ngIf="f.form.controls['phone']?.errors?.validatePhoneNumber"
     >Invalid Number</mat-error
   >
@@ -98,29 +99,30 @@ If you want to show the sample number for the country selected or errors , use m
 
 ## Inputs
 
-| Options            | Type                        | Default      | Description                                                                         |
-| ------------------ | --------------------------- | ------------ | ----------------------------------------------------------------------------------- |
-| autocomplete       | `off`     \| `tel`          | `off`        | For input autocompletion                                                            |
-| cssClass           | `string`                    | `undefined`  | If input custom class are needed                                                    |
-| defaultCountry     | `CountryCode`               | `undefined`  | Default country code                                                                |
-| enablePlaceholder  | `boolean`                   | `false`      | Input placeholder text, which adapts to the country selected.                       |
-| enableSearch       | `boolean`                   | `false`      | Whether to display a search bar to help filter down the list of countries           |
-| format             | `string`               **** | `default`    | Format of "as you type" input. Possible values: national, international, default    |
-| placeholder        | `string`                    | `undefined`  | Placeholder for the input component.                                                |
-| maxLength          | `number`                    | `15`         | max length of the input.                                                            |
-| onlyCountries      | `string[]`                  | `[]`         | List of manually selected country abbreviations, which will appear in the dropdown. |
-| preferredCountries | `string[]`                  | `[]`         | List of country abbreviations, which will appear at the top.                        |
-| resetOnChange      | `boolean`                   | `false`      | Reset input on country change                                                       |
-| searchPlaceholder  | `string`                    | `Search ...` | Placeholder for the search input                                                    |
-| validation         | `isPossible` \| `isValid`   | `isValid`    | Change the validation type                                                          |
-
+| Options            | Type                      | Default      | Description                                                                         |
+| ------------------ | ------------------------- | ------------ | ----------------------------------------------------------------------------------- |
+| autocomplete       | `off` \| `tel`            | `off`        | For input autocompletion                                                            |
+| cssClass           | `string`                  | `undefined`  | If input custom class are needed                                                    |
+| defaultCountry     | `CountryCode`             | `undefined`  | Default country code                                                                |
+| enablePlaceholder  | `boolean`                 | `false`      | Input placeholder text, which adapts to the country selected.                       |
+| enableSearch       | `boolean`                 | `false`      | Whether to display a search bar to help filter down the list of countries           |
+| format             | `string` \*\*\*\*         | `default`    | Format of "as you type" input. Possible values: national, international, default    |
+| placeholder        | `string`                  | `undefined`  | Placeholder for the input component.                                                |
+| maxLength          | `number`                  | `15`         | max length of the input.                                                            |
+| onlyCountries      | `string[]`                | `[]`         | List of manually selected country abbreviations, which will appear in the dropdown. |
+| preferredCountries | `string[]`                | `[]`         | List of country abbreviations, which will appear at the top.                        |
+| resetOnChange      | `boolean`                 | `false`      | Reset input on country change                                                       |
+| searchPlaceholder  | `string`                  | `Search ...` | Placeholder for the search input                                                    |
+| validation         | `isPossible` \| `isValid` | `isValid`    | Change the validation type                                                          |
 
 ## Outputs
+
 | Options        | Type                    | Default     | Description       |
 | -------------- | ----------------------- | ----------- | ----------------- |
 | countryChanged | `EventEmitter<Country>` | `undefined` | On country change |
 
 ## Css variable
+
 | Name                                   | Default        | Explanation                                                                   |
 | -------------------------------------- | -------------- | ----------------------------------------------------------------------------- |
 | `--ngxMatInputTel-opacity`             | `0`            | If you wish both, the country flag and the placeholder to be shown by default |
@@ -130,13 +132,12 @@ If you want to show the sample number for the country selected or errors , use m
 | `--ngxMatInputTel-menu-flag-display`   | `inline-block` | If you wish to hide the country flag inside the menu only                     |
 
 ## Validator
+
 In case you had to manually remove the validator, the library exported it so you could add it back again.
 
 | Name                      | Description                                     | Example                                                |
 | ------------------------- | ----------------------------------------------- | ------------------------------------------------------ |
 | `ngxMatInputTelValidator` | The actual phone validator used for the control | `phoneControl.addValidators([ngxMatInputTlValidator])` |
-
-
 
 ## Library Contributions
 
@@ -162,14 +163,15 @@ In your project run:
 `$ npm install --save {{path to your local '*.tgz' package file}}`
 
 ## Authors and acknowledgment
-* maintainer [Raphaël Balet](https://github.com/rbalet) 
-* Forked from [ngx-mat-intl-tel-input](https://github.com/tanansatpal/ngx-mat-intl-tel-input)
+
+- maintainer [Raphaël Balet](https://github.com/rbalet)
+- Forked from [ngx-mat-intl-tel-input](https://github.com/tanansatpal/ngx-mat-intl-tel-input)
 
 ### Contributors
+
 Contributions are welcome! See our [contribution notes](CONTRIBUTING.md).
 
 [<img alt="Contributor rbalet" src="https://avatars.githubusercontent.com/u/44493964?v=4&size=128" width=64>](https://github.com/rbalet)
 [<img alt="Contributor ChristianLoosliVGT" src="https://avatars.githubusercontent.com/u/126682673?v=4&size=128" width=64>](https://github.com/ChristianLoosliVGT)
-
 
 [![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/widness)

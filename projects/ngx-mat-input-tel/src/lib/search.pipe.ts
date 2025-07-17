@@ -13,9 +13,7 @@ export class SearchPipe implements PipeTransform {
     }
 
     return countries.filter((country) => {
-      return `${country.name}+${country.dialCode}${
-        country.areaCodes ? country.areaCodes.join(',') : ''
-      }`
+      return `${country.name}+${country.dialCode}${country.areaCodes ? country.areaCodes.join(',') : ''}`
         .toLowerCase()
         .includes(searchCriteria.toLowerCase())
     })
