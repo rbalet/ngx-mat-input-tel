@@ -29,6 +29,7 @@
         type="text"
         [placeholder]="searchPlaceholder"
         (click)="$event.stopPropagation()"
+        (input)="onSearchInputChange()"
         style="
           width: calc(100% - 4px);
           height: 34px;
