@@ -17,58 +17,56 @@
     ></ngx-mat-input-tel-flag>
   </button>
 
-  <mat-menu
-    #menu="matMenu"
-    class="ngx-mat-input-tel-overlay-pane"
-    [backdropClass]="'ngx-mat-input-tel-overlay-backdrop'"
-  >
-    @if (enableSearch) {
-      <input
-        #menuSearchInput
-        class="country-search"
-        [(ngModel)]="searchCriteria"
-        type="text"
-        [placeholder]="searchPlaceholder"
-        (click)="$event.stopPropagation()"
-        style="
-          width: calc(100% - 4px);
-          height: 34px;
-          border-top: none;
-          border-right: none;
-          border-left: none;
-          border-image: initial;
-          border-bottom: 1px solid rgb(221, 221, 221);
-          font-size: 14px;
-          padding: 20px 10px 24px;
-          box-sizing: border-box;
-          background: transparent;
-          margin: 2px;
-        "
-      />
-    }
-    @for (country of $preferredCountriesInDropDown(); track $index) {
-      <button
-        type="button"
-        mat-menu-item
-        class="country-list-button"
-        (click)="onCountrySelect(country)"
-      >
-        <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
-      </button>
-    }
-    @if ($preferredCountriesInDropDown().length) {
-      <mat-divider></mat-divider>
-    }
-    @for (country of $availableCountries() | search: searchCriteria; track $index) {
-      <button
-        type="button"
-        mat-menu-item
-        class="country-list-button"
-        (click)="onCountrySelect(country)"
-      >
-        <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
-      </button>
-    }
+  <mat-menu #menu="matMenu">
+    <ng-template matMenuContent>
+      @if (enableSearch) {
+        <input
+          #menuSearchInput
+          class="country-search"
+          [(ngModel)]="searchCriteria"
+          type="text"
+          [placeholder]="searchPlaceholder"
+          (click)="$event.stopPropagation()"
+          style="
+            width: calc(100% - 4px);
+            height: 34px;
+            border-top: none;
+            border-right: none;
+            border-left: none;
+            border-image: initial;
+            border-bottom: 1px solid rgb(221, 221, 221);
+            font-size: 14px;
+            padding: 20px 10px 24px;
+            box-sizing: border-box;
+            background: transparent;
+            margin: 2px;
+          "
+        />
+      }
+      @for (country of $preferredCountriesInDropDown(); track $index) {
+        <button
+          type="button"
+          mat-menu-item
+          class="country-list-button"
+          (click)="onCountrySelect(country)"
+        >
+          <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
+        </button>
+      }
+      @if ($preferredCountriesInDropDown().length) {
+        <mat-divider></mat-divider>
+      }
+      @for (country of $availableCountries() | search: searchCriteria; track $index) {
+        <button
+          type="button"
+          mat-menu-item
+          class="country-list-button"
+          (click)="onCountrySelect(country)"
+        >
+          <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
+        </button>
+      }
+    </ng-template>
   </mat-menu>
 
   <input
@@ -76,6 +74,7 @@
     matInput
     type="tel"
     inputmode="tel"
+    name="tel"
     [autocomplete]="autocomplete"
     [ngClass]="cssClass"
     (blur)="onTouched()"

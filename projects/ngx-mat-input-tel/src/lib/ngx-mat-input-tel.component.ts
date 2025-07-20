@@ -245,7 +245,9 @@ export class NgxMatInputTelComponent
   }
 
   onMenuOpened() {
-    this.menuSearchInput?.nativeElement?.focus()
+    setTimeout(() => {
+      this.menuSearchInput?.nativeElement?.focus()
+    }, 0)
   }
 
   updateErrorState() {
@@ -506,11 +508,5 @@ export class NgxMatInputTelComponent
       this.phoneNumber = asYouType.input(this.phoneNumber.toString()) as E164Number | NationalNumber
     }
     this._previousFormattedNumber = this.phoneNumber.toString()
-  }
-
-  onSearchInputChange(): void {
-    setTimeout(() => {
-      this.menuSearchInput?.nativeElement.focus()
-    }, 200)
   }
 }
