@@ -6,6 +6,7 @@
     class="country-selector"
     [disabled]="disabled"
     (menuOpened)="onMenuOpened()"
+    [attr.aria-label]="ariaLabel"
   >
     <ngx-mat-input-tel-flag
       class="main-flag"

@@ -111,6 +111,7 @@ export class NgxMatInputTelComponent
   }
 
   @Input() autocomplete: 'off' | 'tel' = 'off'
+  @Input() ariaLabel = 'Select country'
   @Input() cssClass?: string
   @Input() defaultCountry?: CountryCode
   @Input() errorStateMatcher: ErrorStateMatcher = this._defaultErrorStateMatcher

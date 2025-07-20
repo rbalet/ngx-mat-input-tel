@@ -99,21 +99,22 @@ If you want to show the sample number for the country selected or errors , use m
 
 ## Inputs
 
-| Options            | Type                      | Default      | Description                                                                         |
-| ------------------ | ------------------------- | ------------ | ----------------------------------------------------------------------------------- |
-| autocomplete       | `off` \| `tel`            | `off`        | For input autocompletion                                                            |
-| cssClass           | `string`                  | `undefined`  | If input custom class are needed                                                    |
-| defaultCountry     | `CountryCode`             | `undefined`  | Default country code                                                                |
-| enablePlaceholder  | `boolean`                 | `false`      | Input placeholder text, which adapts to the country selected.                       |
-| enableSearch       | `boolean`                 | `false`      | Whether to display a search bar to help filter down the list of countries           |
-| format             | `string` \*\*\*\*         | `default`    | Format of "as you type" input. Possible values: national, international, default    |
-| placeholder        | `string`                  | `undefined`  | Placeholder for the input component.                                                |
-| maxLength          | `number`                  | `15`         | max length of the input.                                                            |
-| onlyCountries      | `string[]`                | `[]`         | List of manually selected country abbreviations, which will appear in the dropdown. |
-| preferredCountries | `string[]`                | `[]`         | List of country abbreviations, which will appear at the top.                        |
-| resetOnChange      | `boolean`                 | `false`      | Reset input on country change                                                       |
-| searchPlaceholder  | `string`                  | `Search ...` | Placeholder for the search input                                                    |
-| validation         | `isPossible` \| `isValid` | `isValid`    | Change the validation type                                                          |
+| Options            | Type                      | Default          | Description                                                                         |
+| ------------------ | ------------------------- | ---------------- | ----------------------------------------------------------------------------------- |
+| autocomplete       | `off` \| `tel`            | `off`            | For input autocompletion                                                            |
+| ariaLabel          | `string`                  | `Select country` | Aria label for the country selector button                                          |
+| cssClass           | `string`                  | `undefined`      | If input custom class are needed                                                    |
+| defaultCountry     | `CountryCode`             | `undefined`      | Default country code                                                                |
+| enablePlaceholder  | `boolean`                 | `false`          | Input placeholder text, which adapts to the country selected.                       |
+| enableSearch       | `boolean`                 | `false`          | Whether to display a search bar to help filter down the list of countries           |
+| format             | `string` \*\*\*\*         | `default`        | Format of "as you type" input. Possible values: national, international, default    |
+| placeholder        | `string`                  | `undefined`      | Placeholder for the input component.                                                |
+| maxLength          | `number`                  | `15`             | max length of the input.                                                            |
+| onlyCountries      | `string[]`                | `[]`             | List of manually selected country abbreviations, which will appear in the dropdown. |
+| preferredCountries | `string[]`                | `[]`             | List of country abbreviations, which will appear at the top.                        |
+| resetOnChange      | `boolean`                 | `false`          | Reset input on country change                                                       |
+| searchPlaceholder  | `string`                  | `Search ...`     | Placeholder for the search input                                                    |
+| validation         | `isPossible` \| `isValid` | `isValid`        | Change the validation type                                                          |
 
 ## Outputs
 
