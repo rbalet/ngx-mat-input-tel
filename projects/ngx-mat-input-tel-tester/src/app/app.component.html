@@ -10,7 +10,7 @@
         defaultCountry="US"
         enablePlaceholder
         enableSearch
-        [formControl]="phoneForm.controls.phone"
+        formControlName="phone"
         describedBy="phoneInput"
         required
         #phone
@@ -94,5 +94,13 @@
   <div>
     <strong>Form value:</strong>
     <pre>{{ f1.form.value | json }}</pre>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div>
+    <h2>Inside a modal</h2>
+
+    <button mat-raised-button (click)="openDialog()">Open Dialog</button>
   </div>
 </div>

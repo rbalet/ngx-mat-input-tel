@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, signal } from '@angular/core'
+import { JsonPipe, KeyValuePipe } from '@angular/common'
+import { AfterViewInit, Component, inject, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
+import { MatDialog } from '@angular/material/dialog'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatFormFieldModule } from '@angular/material/form-field'
-import { MatInputModule } from '@angular/material/input'
-import { BrowserModule } from '@angular/platform-browser'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { NgxMatInputTelComponent } from '../../../ngx-mat-input-tel/src/lib/ngx-mat-input-tel.component'
+import { DialogComponent } from './dialog/dialog.component'
 
 interface PhoneForm {
   phone: FormControl<string | null>
@@ -21,16 +21,16 @@ interface ProfileForm {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-
     // Forms
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule,
 
     // Components
     NgxMatInputTelComponent,
+
+    // Pipes
+    JsonPipe,
+    KeyValuePipe,
 
     // Mat
     MatButtonModule,
@@ -38,6 +38,8 @@ interface ProfileForm {
   ],
 })
 export class AppComponent implements AfterViewInit {
+  readonly #matDialog = inject(MatDialog)
+
   phoneForm = new FormGroup<PhoneForm>({
     phone: new FormControl(null, [Validators.required, Validators.maxLength(12)]),
   })
@@ -72,6 +74,14 @@ export class AppComponent implements AfterViewInit {
     this.profileForm.valueChanges.subscribe((value) => {
       // Only emitting correct number
       console.log('phoneForm.valueChanges', value)
+    })
+  }
+
+  openDialog() {
+    const dialogRef = this.#matDialog.open(DialogComponent)
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed', result)
     })
   }
 }
