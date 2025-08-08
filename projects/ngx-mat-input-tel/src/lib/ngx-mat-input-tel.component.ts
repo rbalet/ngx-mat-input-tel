@@ -45,7 +45,7 @@ import {
   parsePhoneNumberFromString,
 } from 'libphonenumber-js'
 import { Subject } from 'rxjs'
-import { ALL_COUNTRIES, EXAMPLES } from './data/country-code.const'
+import { ALL_COUNTRIES, COUNTRY_NAMES, EXAMPLES } from './data/country-code.const'
 import { Country } from './model/country.model'
 import { PhoneNumberFormat } from './model/phone-number-format.model'
 import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag.component'
@@ -98,6 +98,7 @@ export class NgxMatInputTelComponent
   extends ngxMatInputTelBase
   implements OnInit, DoCheck, OnDestroy
 {
+  static readonly DEFAULT_LOCALE_COUNTRY_NAME = 'en';
   static nextId = 0
   @ViewChild(MatMenu) matMenu!: MatMenu
   @ViewChild('menuSearchInput', { static: false }) menuSearchInput?: ElementRef<HTMLInputElement>
@@ -168,6 +169,22 @@ export class NgxMatInputTelComponent
     return !this.phoneNumber
   }
 
+  @Input()
+  set countryNameLocale(value: string) {
+    if (value in COUNTRY_NAMES) {
+      this._countryNameLocale = value;
+    } else {
+      this._countryNameLocale = NgxMatInputTelComponent.DEFAULT_LOCALE_COUNTRY_NAME;
+    }
+
+    this._initAllCountries();
+
+    this.$availableCountries.set(this._allCountries);
+    this.$preferredCountriesInDropDown.set(
+      this._getFilteredCountries(this.preferredCountries)
+    );
+  }
+
   @Output()
   countryChanged: EventEmitter<Country> = new EventEmitter<Country>()
 
@@ -175,6 +192,7 @@ export class NgxMatInputTelComponent
   focused = false
   describedBy = ''
   phoneNumber?: E164Number | NationalNumber = '' as E164Number | NationalNumber
+  private _countryNameLocale: string = NgxMatInputTelComponent.DEFAULT_LOCALE_COUNTRY_NAME;
   private _allCountries: Country[] = []
   $availableCountries = signal<Country[]>(this._initAllCountries())
   $preferredCountriesInDropDown = signal<Country[]>([])
@@ -383,7 +401,12 @@ export class NgxMatInputTelComponent
   }
 
   protected _initAllCountries(): Country[] {
-    this._allCountries = ALL_COUNTRIES.map((c) => {
+    const localizedCountries = ALL_COUNTRIES.map(country => {
+      const name = COUNTRY_NAMES[this._countryNameLocale].find(name => country[0] == name[1]);
+      return [name![0], ...country];
+    });
+
+    this._allCountries = localizedCountries.map((c) => {
       const country: Country = {
         name: c[0].toString(),
         iso2: c[1].toString(),
