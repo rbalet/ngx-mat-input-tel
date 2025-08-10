@@ -26,6 +26,7 @@
           [(ngModel)]="$searchCriteria"
           [placeholder]="searchPlaceholder"
           (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
           style="
             width: calc(100% - 4px);
             height: 34px;
