@@ -23,7 +23,7 @@
         <input
           #menuSearchInput
           class="country-search"
-          [(ngModel)]="searchCriteria"
+          [(ngModel)]="$searchCriteria"
           type="text"
           [placeholder]="searchPlaceholder"
           (click)="$event.stopPropagation()"
@@ -56,7 +56,7 @@
       @if ($preferredCountriesInDropDown().length) {
         <mat-divider></mat-divider>
       }
-      @for (country of $availableCountries() | search: searchCriteria; track $index) {
+      @for (country of $selectableCountries(); track country.iso2) {
         <button
           type="button"
           mat-menu-item

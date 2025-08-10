@@ -18,6 +18,8 @@ import {
   ViewChild,
   WritableSignal,
   booleanAttribute,
+  computed,
+  model,
   signal,
 } from '@angular/core'
 import {
@@ -50,7 +52,6 @@ import { Country } from './model/country.model'
 import { PhoneNumberFormat } from './model/phone-number-format.model'
 import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag.component'
 import { ngxMatInputTelValidator } from './ngx-mat-input-tel.validator'
-import { SearchPipe } from './search.pipe'
 
 class ngxMatInputTelBase {
   constructor(
@@ -89,9 +90,6 @@ class ngxMatInputTelBase {
 
     // Components
     NgxMatInputTelFlagComponent,
-
-    // Pipes
-    SearchPipe,
   ],
 })
 export class NgxMatInputTelComponent
@@ -177,11 +175,19 @@ export class NgxMatInputTelComponent
   phoneNumber?: E164Number | NationalNumber = '' as E164Number | NationalNumber
   private _allCountries: Country[] = []
   $availableCountries = signal<Country[]>(this._initAllCountries())
+  $selectableCountries = computed(() => {
+    if (!this.$searchCriteria() || this.$searchCriteria() === '') return this.$availableCountries()
+    return this.$availableCountries().filter((country) => {
+      return `${country.name}+${country.dialCode}${country.areaCodes ? country.areaCodes.join(',') : ''}`
+        .toLowerCase()
+        .includes(this.$searchCriteria().toLowerCase())
+    })
+  })
   $preferredCountriesInDropDown = signal<Country[]>([])
   $selectedCountry!: WritableSignal<Country>
   numberInstance?: PhoneNumber
   value?: any
-  searchCriteria?: string
+  $searchCriteria = model<string>('')
 
   private _previousFormattedNumber?: string
   private _format: PhoneNumberFormat = 'default'
