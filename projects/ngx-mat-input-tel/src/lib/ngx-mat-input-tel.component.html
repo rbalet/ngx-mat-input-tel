@@ -24,7 +24,6 @@
           #menuSearchInput
           class="country-search"
           [(ngModel)]="$searchCriteria"
-          type="text"
           [placeholder]="searchPlaceholder"
           (click)="$event.stopPropagation()"
           style="
@@ -43,7 +42,7 @@
           "
         />
       }
-      @for (country of $preferredCountriesInDropDown(); track $index) {
+      @for (country of $selectablePreferredCountriesInDropDown(); track country.name) {
         <button
           type="button"
           mat-menu-item
@@ -53,10 +52,10 @@
           <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
         </button>
       }
-      @if ($preferredCountriesInDropDown().length) {
+      @if ($selectablePreferredCountriesInDropDown().length && $selectableCountries().length) {
         <mat-divider></mat-divider>
       }
-      @for (country of $selectableCountries(); track country.iso2) {
+      @for (country of $selectableCountries(); track country.name) {
         <button
           type="button"
           mat-menu-item

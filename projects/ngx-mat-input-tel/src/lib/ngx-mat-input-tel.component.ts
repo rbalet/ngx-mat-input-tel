@@ -184,6 +184,15 @@ export class NgxMatInputTelComponent
     })
   })
   $preferredCountriesInDropDown = signal<Country[]>([])
+  $selectablePreferredCountriesInDropDown = computed(() => {
+    if (!this.$searchCriteria() || this.$searchCriteria() === '')
+      return this.$preferredCountriesInDropDown()
+    return this.$preferredCountriesInDropDown().filter((country) => {
+      return `${country.name}+${country.dialCode}${country.areaCodes ? country.areaCodes.join(',') : ''}`
+        .toLowerCase()
+        .includes(this.$searchCriteria().toLowerCase())
+    })
+  })
   $selectedCountry!: WritableSignal<Country>
   numberInstance?: PhoneNumber
   value?: any

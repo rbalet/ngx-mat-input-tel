@@ -5,10 +5,13 @@ import { CountryFlag } from '../model/country.model'
 @Component({
   selector: 'ngx-mat-input-tel-flag',
   imports: [NgClass],
-  template: `<div class="flag" [ngClass]="country.flagClass"></div>
+  template: `
+    <div class="flag" [ngClass]="country.flagClass"></div>
 
     @if (country.name) {
-      <span class="country-selector-name">{{ country.name }}</span>
+      <span class="country-selector-name">
+        {{ country.name }}
+      </span>
     }
 
     @if (country.dialCode) {
@@ -19,7 +22,8 @@ import { CountryFlag } from '../model/country.model'
           {{ country.areaCodes.join(', ') }}
         }
       </span>
-    }`,
+    }
+  `,
   styleUrl: './ngx-mat-input-tel-flag.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
