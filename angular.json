@@ -138,18 +138,6 @@
               "projects/ngx-mat-input-tel-tester//**/*.html"
             ]
           }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/ngx-mat-input-tel-tester/e2e/protractor.conf.js",
-            "devServerTarget": "ngx-mat-input-tel-tester:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "ngx-mat-input-tel-tester:serve:production"
-            }
-          }
         }
       }
     }
