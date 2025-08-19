@@ -16,7 +16,7 @@
         #phone
         maxLength="20"
       ></ngx-mat-input-tel>
-      <mat-hint>e.g. {{ phone.$selectedCountry().placeHolder }}</mat-hint>
+      <mat-hint>e.g. {{ phone.$selectedCountry().placeholder }}</mat-hint>
       @if (phoneForm.controls.phone.errors?.required) {
         <mat-error> Required Field </mat-error>
       }
@@ -39,28 +39,26 @@
   </form>
 
   <br />
-  <div>
-    <strong>Is input valid:</strong>
-    <pre>{{ !phoneForm.controls.phone.invalid }}</pre>
-  </div>
-  <div>
-    <strong>Is input touched:</strong>
-    <pre>{{ phoneForm.controls.phone.touched }}</pre>
-  </div>
-  <div>
+  <div class="value-container">
     <strong>Is form valid:</strong>
-    <pre>{{ phoneForm.valid }}</pre>
+    <code>{{ phoneForm.valid }}</code>
   </div>
-  <div>
+  <div class="value-container">
+    <strong>Is input valid:</strong>
+    <code>{{ !phoneForm.controls.phone.invalid }}</code>
+  </div>
+  <div class="value-container">
+    <strong>Is input touched:</strong>
+    <code>{{ phoneForm.controls.phone.touched }}</code>
+  </div>
+  <div class="value-container">
     <strong>Form value:</strong>
-    <pre>{{ phoneForm.value | json }}</pre>
+    <pre><code>{{ phoneForm.value | json }}</code></pre>
   </div>
-  <div>
+  <div class="value-container">
     <strong>Form validation errors:</strong>
     @for (control of phoneForm.controls | keyvalue; track control) {
-      <pre>
-        {{ control.key }}: {{ control.value.errors | json }}
-      </pre>
+      <pre><code> {{ control.key }}: {{ control.value.errors | json }} </code></pre>
     }
   </div>
 
@@ -68,7 +66,8 @@
 
   <form #f1="ngForm" [formGroup]="profileForm" class="second-form">
     <h2>Required & PlaceHolder</h2>
-    <mat-form-field floatLabel="always">
+    <mat-form-field floatLabel="always" appearance="outline">
+      <mat-label>Phone</mat-label>
       <ngx-mat-input-tel
         [cssClass]="'custom'"
         [preferredCountries]="['cl', 've']"
@@ -80,8 +79,7 @@
         enableSearch
         #phone1
       ></ngx-mat-input-tel>
-      <mat-label>Phone</mat-label>
-      <mat-hint>e.g. {{ phone1.$selectedCountry().placeHolder }}</mat-hint>
+      <mat-hint>e.g. {{ phone1.$selectedCountry().placeholder }}</mat-hint>
       @if (profileForm.controls.phone.errors?.required) {
         <mat-error> Required Field </mat-error>
       }
@@ -91,9 +89,9 @@
     </mat-form-field>
   </form>
 
-  <div>
+  <div class="value-container">
     <strong>Form value:</strong>
-    <pre>{{ f1.form.value | json }}</pre>
+    <pre><code>{{ f1.form.value | json }}</code></pre>
   </div>
 
   <mat-divider></mat-divider>
