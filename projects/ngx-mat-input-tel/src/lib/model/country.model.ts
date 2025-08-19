@@ -9,5 +9,5 @@ export interface Country extends CountryFlag {
   name: string
   iso2: string
   priority: number
-  placeHolder?: string
+  placeholder?: string
 }

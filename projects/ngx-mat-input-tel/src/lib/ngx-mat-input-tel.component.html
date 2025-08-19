@@ -82,7 +82,7 @@
     [(ngModel)]="phoneNumber"
     (ngModelChange)="onPhoneNumberChange()"
     [errorStateMatcher]="errorStateMatcher"
-    [placeholder]="placeholder || $selectedCountry().placeHolder || ''"
+    [placeholder]="placeholder || $selectedCountry().placeholder || ''"
     [disabled]="disabled"
     #focusable
     [maxlength]="maxLength"

@@ -89,7 +89,7 @@ If you want to show the sample number for the country selected or errors , use m
     formControlName="phone"
     #phone
   ></ngx-mat-input-tel>
-  <mat-hint>e.g. {{phone.selectedCountry.placeHolder}}</mat-hint>
+  <mat-hint>e.g. {{phone.$selectedCountry().placeholder}}</mat-hint>
   <mat-error *ngIf="f.form.controls['phone']?.errors?.required">Required Field</mat-error>
   <mat-error *ngIf="f.form.controls['phone']?.errors?.validatePhoneNumber"
     >Invalid Number</mat-error

@@ -132,8 +132,9 @@ export class NgxMatInputTelComponent
   @Input({ transform: booleanAttribute }) enablePlaceholder = false
   @Input({ transform: booleanAttribute }) enableSearch = false
   @Input({ transform: booleanAttribute }) resetOnChange = false
-  @Input()
-  set format(value: PhoneNumberFormat) {
+
+  private _format: PhoneNumberFormat = 'default'
+  @Input() set format(value: PhoneNumberFormat) {
     this._format = value
     this.phoneNumber = this.formattedPhoneNumber()
     this.stateChanges.next()
@@ -199,7 +200,6 @@ export class NgxMatInputTelComponent
   $searchCriteria = model<string>('')
 
   private _previousFormattedNumber?: string
-  private _format: PhoneNumberFormat = 'default'
 
   onTouched = () => {}
   propagateChange = (_: any) => {}
@@ -231,6 +231,7 @@ export class NgxMatInputTelComponent
   }
 
   ngOnInit() {
+    this.$availableCountries.set(this._initAllCountries())
     this._setPreferredCountriesInDropDown()
     this._setDefaultCountry()
 
@@ -386,7 +387,7 @@ export class NgxMatInputTelComponent
       priority: 0,
       areaCodes: undefined,
       flagClass: 'UN',
-      placeHolder: '',
+      placeholder: '',
     }) as Country
   }
 
@@ -406,11 +407,11 @@ export class NgxMatInputTelComponent
         priority: +c[3] || 0,
         areaCodes: (c[4] as string[]) || undefined,
         flagClass: c[1].toString().toUpperCase(),
-        placeHolder: '',
+        placeholder: '',
       }
 
       if (this.enablePlaceholder) {
-        country.placeHolder = this._getPhoneNumberPlaceHolder(country.iso2.toUpperCase())
+        country.placeholder = this._getPhoneNumberPlaceHolder(country.iso2.toUpperCase())
       }
 
       return country
