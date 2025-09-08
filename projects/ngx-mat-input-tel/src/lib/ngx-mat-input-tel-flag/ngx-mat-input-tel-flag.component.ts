@@ -6,7 +6,7 @@ import { CountryFlag } from '../model/country.model'
   selector: 'ngx-mat-input-tel-flag',
   imports: [NgClass],
   template: `
-    <div class="flag" [ngClass]="country.flagClass"></div>
+    <div class="flag" [ngClass]="country.iso2"></div>
 
     @if (country.name) {
       <span class="country-selector-name">

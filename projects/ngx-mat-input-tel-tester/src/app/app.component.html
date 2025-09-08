@@ -6,7 +6,7 @@
     <mat-form-field>
       <ngx-mat-input-tel
         [cssClass]="'custom'"
-        [preferredCountries]="['ca', 'us']"
+        [preferredCountries]="['CA', 'US']"
         defaultCountry="US"
         enablePlaceholder
         enableSearch
@@ -66,11 +66,13 @@
 
   <form #f1="ngForm" [formGroup]="profileForm" class="second-form">
     <h2>Required & PlaceHolder</h2>
+
     <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>Phone</mat-label>
       <ngx-mat-input-tel
         [cssClass]="'custom'"
-        [preferredCountries]="['cl', 've']"
+        [preferredCountries]="['US', 'FR']"
+        [countriesName]="frCountriesName"
         [onlyCountries]="$onlyCountries()"
         [searchPlaceholder]="'Buscar...'"
         [formControl]="profileForm.controls.phone"

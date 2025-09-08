@@ -65,7 +65,7 @@ Refer to main app in this repository for working example.
 
 <form #f="ngForm" [formGroup]="phoneForm">
   <ngx-mat-input-tel
-  [preferredCountries]="['us', 'gb']"
+  [preferredCountries]="['US', 'GB']"
   [enablePlaceholder]="true"
   [enableSearch]="true"
   name="phone"
@@ -81,8 +81,8 @@ If you want to show the sample number for the country selected or errors , use m
 ```html
 <form #f="ngForm" [formGroup]="phoneForm">
   <ngx-mat-input-tel
-    [preferredCountries]="['us', 'gb']"
-    [onlyCountries]="['us', 'gb', 'es']"
+    [preferredCountries]="['US', 'GB']"
+    [onlyCountries]="['US', 'GB', 'ES']"
     [enablePlaceholder]="true"
     name="phone"
     autocomplete="tel"
@@ -101,16 +101,17 @@ If you want to show the sample number for the country selected or errors , use m
 
 | Options            | Type                      | Default          | Description                                                                         |
 | ------------------ | ------------------------- | ---------------- | ----------------------------------------------------------------------------------- |
-| autocomplete       | `off` \| `tel`            | `off`            | For input autocompletion                                                            |
 | ariaLabel          | `string`                  | `Select country` | Aria label for the country selector button                                          |
+| autocomplete       | `off` \| `tel`            | `off`            | For input autocompletion                                                            |
 | cssClass           | `string`                  | `undefined`      | If input custom class are needed                                                    |
+| countriesName      | `Record<string, string>`  | `COUNTRIES_NAME` | For using different country names in the dropdown (Eg. Multilingual website)        |
 | defaultCountry     | `CountryCode`             | `undefined`      | Default country code                                                                |
 | enablePlaceholder  | `boolean`                 | `false`          | Input placeholder text, which adapts to the country selected.                       |
 | enableSearch       | `boolean`                 | `false`          | Whether to display a search bar to help filter down the list of countries           |
 | format             | `string` \*\*\*\*         | `default`        | Format of "as you type" input. Possible values: national, international, default    |
-| placeholder        | `string`                  | `undefined`      | Placeholder for the input component.                                                |
 | maxLength          | `number`                  | `15`             | max length of the input.                                                            |
 | onlyCountries      | `string[]`                | `[]`             | List of manually selected country abbreviations, which will appear in the dropdown. |
+| placeholder        | `string`                  | `undefined`      | Placeholder for the input component.                                                |
 | preferredCountries | `string[]`                | `[]`             | List of country abbreviations, which will appear at the top.                        |
 | resetOnChange      | `boolean`                 | `false`          | Reset input on country change                                                       |
 | searchPlaceholder  | `string`                  | `Search ...`     | Placeholder for the search input                                                    |

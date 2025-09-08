@@ -1,5 +1,5 @@
 export interface CountryFlag {
-  flagClass: string
+  iso2: string
   dialCode: string
   name?: string
   areaCodes?: string[]
@@ -7,7 +7,6 @@ export interface CountryFlag {
 
 export interface Country extends CountryFlag {
   name: string
-  iso2: string
   priority: number
   placeholder?: string
 }

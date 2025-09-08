@@ -1,6 +1,12 @@
 import { JsonPipe, KeyValuePipe } from '@angular/common'
 import { AfterViewInit, Component, inject, signal } from '@angular/core'
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
 import { MatDividerModule } from '@angular/material/divider'
@@ -22,6 +28,7 @@ interface ProfileForm {
   styleUrls: ['./app.component.scss'],
   imports: [
     // Forms
+    FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
 
@@ -48,12 +55,18 @@ export class AppComponent implements AfterViewInit {
     phone: new FormControl(null),
   })
 
-  $onlyCountries = signal(['us', 'cl', 've'])
+  $onlyCountries = signal(['US', 'DE', 'FR'])
+
+  frCountriesName: Record<string, string> = {
+    US: 'États-Unis',
+    FR: 'France',
+    DE: 'Allemagne',
+  }
 
   constructor() {
     setTimeout(() => {
       // Fake onlyCountries change
-      this.$onlyCountries.set(['us', 'cl'])
+      this.$onlyCountries.set(['US', 'DE'])
     }, 1000)
   }
 

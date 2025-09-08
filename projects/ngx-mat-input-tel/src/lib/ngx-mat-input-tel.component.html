@@ -11,7 +11,7 @@
     <ngx-mat-input-tel-flag
       class="main-flag"
       [country]="{
-        flagClass: $selectedCountry().flagClass,
+        iso2: $selectedCountry().iso2,
         dialCode: $selectedCountry().dialCode,
       }"
     ></ngx-mat-input-tel-flag>
@@ -43,27 +43,36 @@
           "
         />
       }
-      @for (country of $selectablePreferredCountriesInDropDown(); track country.name) {
+      @for (
+        country of $selectablePreferredCountriesInDropDown() | keyvalue: null;
+        track country.key
+      ) {
         <button
           type="button"
           mat-menu-item
           class="country-list-button"
           (click)="onCountrySelect(country)"
         >
-          <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
+          <ngx-mat-input-tel-flag
+            class="menu-flag"
+            [country]="country.value"
+          ></ngx-mat-input-tel-flag>
         </button>
       }
-      @if ($selectablePreferredCountriesInDropDown().length && $selectableCountries().length) {
+      @if ($showDivider()) {
         <mat-divider></mat-divider>
       }
-      @for (country of $selectableCountries(); track country.name) {
+      @for (country of $selectableCountries() | keyvalue: null; track country.key) {
         <button
           type="button"
           mat-menu-item
           class="country-list-button"
           (click)="onCountrySelect(country)"
         >
-          <ngx-mat-input-tel-flag class="menu-flag" [country]="country"></ngx-mat-input-tel-flag>
+          <ngx-mat-input-tel-flag
+            class="menu-flag"
+            [country]="country.value"
+          ></ngx-mat-input-tel-flag>
         </button>
       }
     </ng-template>

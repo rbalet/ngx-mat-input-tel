@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y'
 import { coerceBooleanProperty } from '@angular/cdk/coercion'
-import { NgClass } from '@angular/common'
+import { KeyValuePipe, NgClass } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -16,7 +16,6 @@ import {
   Output,
   Self,
   ViewChild,
-  WritableSignal,
   booleanAttribute,
   computed,
   model,
@@ -47,7 +46,7 @@ import {
   parsePhoneNumberFromString,
 } from 'libphonenumber-js'
 import { Subject } from 'rxjs'
-import { ALL_COUNTRIES, EXAMPLES } from './data/country-code.const'
+import { COUNTRIES_CODE, COUNTRIES_NAME, EXAMPLES } from './data/country-code.const'
 import { Country } from './model/country.model'
 import { PhoneNumberFormat } from './model/phone-number-format.model'
 import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag.component'
@@ -88,6 +87,9 @@ class ngxMatInputTelBase {
     MatRippleModule,
     MatDividerModule,
 
+    // Pipes
+    KeyValuePipe,
+
     // Components
     NgxMatInputTelFlagComponent,
   ],
@@ -116,11 +118,18 @@ export class NgxMatInputTelComponent
   @Input() maxLength: string | number = 15
   @Input() name?: string
   @Input() placeholder = ''
-  @Input() preferredCountries: string[] = []
+
+  @Input() countriesName = COUNTRIES_NAME
+
+  private _preferredCountries: string[] = []
+  @Input() set preferredCountries(value: string[]) {
+    this._preferredCountries = value.map((v) => v.toUpperCase())
+  }
 
   @Input() set onlyCountries(countryCodes: string[]) {
     if (countryCodes.length) {
-      this.$availableCountries.set(this._getFilteredCountries(countryCodes))
+      const codes = countryCodes.map((c) => c.toUpperCase())
+      this.$availableCountries.set(this._getFilteredCountries(codes))
     }
 
     this._setPreferredCountriesInDropDown()
@@ -174,27 +183,33 @@ export class NgxMatInputTelComponent
   focused = false
   describedBy = ''
   phoneNumber?: E164Number | NationalNumber = '' as E164Number | NationalNumber
-  private _allCountries: Country[] = []
-  $availableCountries = signal<Country[]>(this._initAllCountries())
+  private _allCountries: Record<string, Country> = {}
+  $availableCountries = signal<Record<string, Country>>(this._initAllCountries())
   $selectableCountries = computed(() => {
     if (!this.$searchCriteria() || this.$searchCriteria() === '') return this.$availableCountries()
-    return this.$availableCountries().filter((country) => {
-      return `${country.name}+${country.dialCode}${country.areaCodes ? country.areaCodes.join(',') : ''}`
-        .toLowerCase()
-        .includes(this.$searchCriteria().toLowerCase())
-    })
+
+    return this._getOnSearchCountries(
+      this.$searchCriteria().toLowerCase(),
+      this.$availableCountries(),
+    )
   })
-  $preferredCountriesInDropDown = signal<Country[]>([])
+  $preferredCountriesInDropDown = signal<Record<string, Country>>({})
   $selectablePreferredCountriesInDropDown = computed(() => {
     if (!this.$searchCriteria() || this.$searchCriteria() === '')
       return this.$preferredCountriesInDropDown()
-    return this.$preferredCountriesInDropDown().filter((country) => {
-      return `${country.name}+${country.dialCode}${country.areaCodes ? country.areaCodes.join(',') : ''}`
-        .toLowerCase()
-        .includes(this.$searchCriteria().toLowerCase())
-    })
+
+    return this._getOnSearchCountries(
+      this.$searchCriteria().toLowerCase(),
+      this.$preferredCountriesInDropDown(),
+    )
   })
-  $selectedCountry!: WritableSignal<Country>
+  $showDivider = computed(() => {
+    return (
+      Object.entries(this.$preferredCountriesInDropDown()).length > 0 &&
+      Object.entries(this.$selectableCountries()).length > 0
+    )
+  })
+  $selectedCountry = signal<Country>({} as Country)
   numberInstance?: PhoneNumber
   value?: any
   $searchCriteria = model<string>('')
@@ -283,7 +298,7 @@ export class NgxMatInputTelComponent
     }
   }
 
-  private _setPreferredCountriesInDropDown(countries = this.preferredCountries) {
+  private _setPreferredCountriesInDropDown(countries = this._preferredCountries) {
     this.$preferredCountriesInDropDown.set(this._getFilteredCountries(countries))
   }
 
@@ -298,18 +313,39 @@ export class NgxMatInputTelComponent
     } else if (this.$preferredCountriesInDropDown().length) {
       country = this.$preferredCountriesInDropDown()[0]
     } else {
-      country = this._allCountries[0]
+      const firstKeyValue = Object.entries(this._allCountries)[0]
+      country = { ...firstKeyValue[1], iso2: firstKeyValue[0] }
     }
-    this.$selectedCountry = signal<Country>(country)
+
+    this.$selectedCountry.set(country)
     this.countryChanged.emit(country)
   }
 
-  private _getFilteredCountries(countryCodes: string[]) {
-    const filteredCountries = this._allCountries.filter((c) => countryCodes.includes(c.iso2))
+  private _getFilteredCountries(countryCodes: string[]): Record<string, Country> {
+    return Object.values(this._allCountries)
+      .filter((c) => countryCodes.includes(c.iso2))
+      .sort((a, b) => countryCodes.indexOf(a.name) - countryCodes.indexOf(b.name))
+      .reduce<Record<string, Country>>((acc, country) => {
+        acc[country.iso2] = country
+        return acc
+      }, {})
+  }
 
-    return filteredCountries.sort(
-      (a, b) => countryCodes.indexOf(a.iso2) - countryCodes.indexOf(b.iso2),
-    )
+  private _getOnSearchCountries(
+    searchTerm: string,
+    countries: Record<string, Country>,
+  ): Record<string, Country> {
+    const result: Record<string, Country> = {}
+    for (const country of Object.values(countries)) {
+      if (
+        country.name.toLowerCase().includes(searchTerm) ||
+        country.dialCode.includes(searchTerm) ||
+        (country.areaCodes && country.areaCodes.join(',').includes(searchTerm))
+      ) {
+        result[country.iso2] = country
+      }
+    }
+    return result
   }
 
   public onPhoneNumberChange(): void {
@@ -361,15 +397,18 @@ export class NgxMatInputTelComponent
     }
   }
 
-  public onCountrySelect(country: Country): void {
+  public onCountrySelect(country: { key: string; value: Country }): void {
     if (this.phoneNumber) {
       this.phoneNumber = this.numberInstance?.nationalNumber
     }
-    if (this.resetOnChange && this.$selectedCountry() !== country) {
+    if (this.resetOnChange && this.$selectedCountry().iso2 !== country.key) {
       this.reset()
     }
 
-    this.$selectedCountry.set(country)
+    this.$selectedCountry.set({
+      ...country.value,
+      iso2: country.key,
+    })
     this.countryChanged.emit(this.$selectedCountry())
 
     this.onPhoneNumberChange()
@@ -380,15 +419,18 @@ export class NgxMatInputTelComponent
   }
 
   public getCountry(code: CC): Country {
-    return (this._allCountries.find((c) => c.iso2 === code.toLowerCase()) || {
+    const targetCountry = this._allCountries[code]
+    if (targetCountry) {
+      return { ...targetCountry, iso2: code }
+    }
+    return {
       name: 'UN',
       iso2: 'UN',
-      dialCode: undefined,
+      dialCode: '',
       priority: 0,
       areaCodes: undefined,
-      flagClass: 'UN',
       placeholder: '',
-    }) as Country
+    }
   }
 
   public onInputKeyPress(event: any): void {
@@ -398,24 +440,23 @@ export class NgxMatInputTelComponent
     }
   }
 
-  protected _initAllCountries(): Country[] {
-    this._allCountries = ALL_COUNTRIES.map((c) => {
-      const country: Country = {
-        name: c[0].toString(),
-        iso2: c[1].toString(),
-        dialCode: c[2].toString(),
-        priority: +c[3] || 0,
-        areaCodes: (c[4] as string[]) || undefined,
-        flagClass: c[1].toString().toUpperCase(),
-        placeholder: '',
-      }
-
-      if (this.enablePlaceholder) {
-        country.placeholder = this._getPhoneNumberPlaceHolder(country.iso2.toUpperCase())
-      }
-
-      return country
-    })
+  protected _initAllCountries(): Record<string, Country> {
+    this._allCountries = Object.fromEntries(
+      Object.entries(COUNTRIES_CODE).map(([iso2, codes]) => {
+        const country: Country = {
+          name: this.countriesName[iso2] || iso2,
+          iso2: iso2,
+          dialCode: codes[0].toString(),
+          priority: +codes || 0,
+          areaCodes: codes.length > 2 && Array.isArray(codes[2]) ? codes[2] : undefined,
+          placeholder: '',
+        }
+        if (this.enablePlaceholder) {
+          country.placeholder = this._getPhoneNumberPlaceHolder(iso2)
+        }
+        return [iso2, country]
+      }),
+    )
 
     return this._allCountries
   }
@@ -451,18 +492,14 @@ export class NgxMatInputTelComponent
 
         if (!countryCode) return
 
-        if (!this.$selectedCountry) {
-          // Init value was given
-          this.$selectedCountry = signal<Country>(this.getCountry(countryCode))
-        } else {
-          this.$selectedCountry.set(this.getCountry(countryCode))
-        }
+        this.$selectedCountry.set(this.getCountry(countryCode))
+
         if (
           this.$selectedCountry().dialCode &&
           !this.preferredCountries.includes(this.$selectedCountry().iso2)
         ) {
           this.$preferredCountriesInDropDown.update((values) => {
-            return [...values, this.$selectedCountry()]
+            return { ...values, ...{ [this.$selectedCountry().iso2]: this.$selectedCountry() } }
           })
         }
         this.countryChanged.emit(this.$selectedCountry())
