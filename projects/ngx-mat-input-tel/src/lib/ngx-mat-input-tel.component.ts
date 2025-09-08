@@ -441,23 +441,21 @@ export class NgxMatInputTelComponent
   }
 
   protected _initAllCountries(): Record<string, Country> {
-    this._allCountries = Object.fromEntries(
-      Object.entries(COUNTRIES_CODE).map(([iso2, codes]) => {
-        const country: Country = {
-          name: this.countriesName[iso2] || iso2,
-          iso2: iso2,
-          dialCode: codes[0].toString(),
-          priority: +codes || 0,
-          areaCodes: codes.length > 2 && Array.isArray(codes[2]) ? codes[2] : undefined,
-          placeholder: '',
-        }
-        if (this.enablePlaceholder) {
-          country.placeholder = this._getPhoneNumberPlaceHolder(iso2)
-        }
-        return [iso2, country]
-      }),
-    )
-
+    this._allCountries = {}
+    Object.entries(COUNTRIES_CODE).forEach(([iso2, codes]) => {
+      const country: Country = {
+        name: this.countriesName[iso2] || iso2,
+        iso2: iso2,
+        dialCode: codes[0].toString(),
+        priority: +codes || 0,
+        areaCodes: codes.length > 2 && Array.isArray(codes[2]) ? codes[2] : undefined,
+        placeholder: '',
+      }
+      if (this.enablePlaceholder) {
+        country.placeholder = this._getPhoneNumberPlaceHolder(iso2)
+      }
+      this._allCountries[iso2] = country
+    })
     return this._allCountries
   }
 
