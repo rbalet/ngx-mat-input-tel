@@ -91,7 +91,7 @@
     [(ngModel)]="phoneNumber"
     (ngModelChange)="onPhoneNumberChange()"
     [errorStateMatcher]="errorStateMatcher"
-    [placeholder]="placeholder || $selectedCountry().placeholder || ''"
+    [placeholder]="placeholder || ($selectedCountry() | removeIso) || ''"
     [disabled]="disabled"
     #focusable
     [maxlength]="maxLength"

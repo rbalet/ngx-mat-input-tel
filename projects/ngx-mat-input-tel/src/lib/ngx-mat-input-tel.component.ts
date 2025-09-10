@@ -51,6 +51,7 @@ import { Country } from './model/country.model'
 import { PhoneNumberFormat } from './model/phone-number-format.model'
 import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag.component'
 import { ngxMatInputTelValidator } from './ngx-mat-input-tel.validator'
+import { RemoveIsoPipe } from './remove-iso.pipe'
 
 class ngxMatInputTelBase {
   constructor(
@@ -89,6 +90,7 @@ class ngxMatInputTelBase {
 
     // Pipes
     KeyValuePipe,
+    RemoveIsoPipe,
 
     // Components
     NgxMatInputTelFlagComponent,
