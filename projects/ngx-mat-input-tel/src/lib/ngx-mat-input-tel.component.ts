@@ -494,7 +494,7 @@ export class NgxMatInputTelComponent
 
         if (
           this.$selectedCountry().dialCode &&
-          !this.preferredCountries.includes(this.$selectedCountry().iso2)
+          !this._preferredCountries.includes(this.$selectedCountry().iso2)
         ) {
           this.$preferredCountriesInDropDown.update((values) => {
             return { ...values, ...{ [this.$selectedCountry().iso2]: this.$selectedCountry() } }
