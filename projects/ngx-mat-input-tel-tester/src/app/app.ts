@@ -11,8 +11,8 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatFormFieldModule } from '@angular/material/form-field'
-import { NgxMatInputTelComponent } from '../../../ngx-mat-input-tel/src/lib/ngx-mat-input-tel.component'
-import { DialogComponent } from './dialog/dialog.component'
+import { NgxMatInputTelComponent } from '../../../ngx-mat-input-tel/src/lib/ngx-mat-input-tel'
+import { DialogComponent } from './dialog/dialog'
 
 interface PhoneForm {
   phone: FormControl<string | null>
@@ -24,8 +24,8 @@ interface ProfileForm {
 
 @Component({
   selector: 'ngx-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
   imports: [
     // Forms
     FormsModule,

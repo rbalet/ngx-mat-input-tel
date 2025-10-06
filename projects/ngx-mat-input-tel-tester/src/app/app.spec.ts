@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatMenuModule } from '@angular/material/menu'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { AppComponent } from './app.component'
+import { AppComponent } from './app'
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
@@ -29,7 +29,7 @@ describe('AppComponent', () => {
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent)
-    const app = fixture.debugElement.componentInstance
+    const app = fixture.debugElementInstance
     expect(app).toBeTruthy()
   })
 })

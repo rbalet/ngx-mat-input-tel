@@ -21,7 +21,7 @@ import { NgxMatInputTelComponent } from 'projects/ngx-mat-input-tel/src/public-a
     // Components
     NgxMatInputTelComponent,
   ],
-  templateUrl: './dialog.component.html',
+  templateUrl: './dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent {

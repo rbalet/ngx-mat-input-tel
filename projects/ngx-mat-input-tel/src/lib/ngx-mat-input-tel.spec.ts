@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatInputModule } from '@angular/material/input'
 import { MatMenuModule } from '@angular/material/menu'
-import { NgxMatInputTelComponent } from './ngx-mat-input-tel.component'
+import { NgxMatInputTelComponent } from './ngx-mat-input-tel'
 import { SearchPipe } from './search.pipe'
 
 describe('NgxMatInputTelComponent', () => {
@@ -31,7 +31,7 @@ describe('NgxMatInputTelComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NgxMatInputTelComponent)
-    component = fixture.componentInstance
+    component = fixtureInstance
     fixture.detectChanges()
   })
 

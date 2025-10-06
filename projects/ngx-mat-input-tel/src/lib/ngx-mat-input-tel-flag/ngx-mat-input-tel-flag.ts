@@ -24,7 +24,7 @@ import { CountryFlag } from '../model/country.model'
       </span>
     }
   `,
-  styleUrl: './ngx-mat-input-tel-flag.component.scss',
+  styleUrl: './ngx-mat-input-tel-flag.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgxMatInputTelFlagComponent {

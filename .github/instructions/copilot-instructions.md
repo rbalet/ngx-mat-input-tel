@@ -51,8 +51,8 @@
 
 ## Key Files
 
-- `src/lib/ngx-mat-input-tel.component.ts` (main logic)
+- `src/lib/ngx-mat-input-tel.ts` (main logic)
 - `src/lib/data/country-code.const.ts` (country data)
 - `src/lib/ngx-mat-input-tel.validator.ts` (validation)
-- `src/lib/ngx-mat-input-tel-flag/ngx-mat-input-tel-flag.component.ts` (flag rendering)
-- `projects/ngx-mat-input-tel-tester/src/app/app.component.html` (usage examples)
+- `src/lib/ngx-mat-input-tel-flag/ngx-mat-input-tel-flag.ts` (flag rendering)
+- `projects/ngx-mat-input-tel-tester/src/app/app.html` (usage examples)

@@ -49,7 +49,7 @@ import { Subject } from 'rxjs'
 import { COUNTRIES_CODE, COUNTRIES_NAME, EXAMPLES } from './data/country-code.const'
 import { Country } from './model/country.model'
 import { PhoneNumberFormat } from './model/phone-number-format.model'
-import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag.component'
+import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag'
 import { ngxMatInputTelValidator } from './ngx-mat-input-tel.validator'
 import { RemoveIsoPipe } from './remove-iso.pipe'
 
@@ -64,8 +64,8 @@ class ngxMatInputTelBase {
 
 @Component({
   selector: 'ngx-mat-input-tel',
-  templateUrl: './ngx-mat-input-tel.component.html',
-  styleUrls: ['./ngx-mat-input-tel.component.scss'],
+  templateUrl: './ngx-mat-input-tel.html',
+  styleUrls: ['./ngx-mat-input-tel.scss'],
   providers: [
     { provide: MatFormFieldControl, useExisting: NgxMatInputTelComponent },
     {
