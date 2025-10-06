@@ -143,6 +143,7 @@ export class NgxMatInputTelComponent
   @Input({ transform: booleanAttribute }) enablePlaceholder = false
   @Input({ transform: booleanAttribute }) enableSearch = false
   @Input({ transform: booleanAttribute }) resetOnChange = false
+  @Input({ transform: booleanAttribute }) separateDialCode = false
 
   private _format: PhoneNumberFormat = 'default'
   @Input() set format(value: PhoneNumberFormat) {

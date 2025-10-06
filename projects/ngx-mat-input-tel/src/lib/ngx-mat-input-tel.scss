@@ -62,6 +62,38 @@
     &:disabled {
       color: rgba(#000, 0.38);
     }
+
+    &.separate {
+      position: absolute;
+      left: 0;
+      width: 114px;
+      border-color: var(--mat-form-field-outlined-outline-color, var(--mat-sys-outline));
+      border-width: var(--mat-form-field-outlined-outline-width, 1px);
+      border-style: solid;
+      height: 100%;
+      padding-top: var(--mat-form-field-container-vertical-padding, 16px);
+      padding-bottom: var(--mat-form-field-container-vertical-padding, 16px);
+      min-height: var(--mat-form-field-container-height, 56px);
+      top: 0;
+      padding-right: max(
+        16px,
+        var(--mat-form-field-outlined-container-shape, var(--mat-sys-corner-extra-small))
+      );
+      padding-left: max(
+        16px,
+        var(--mat-form-field-outlined-container-shape, var(--mat-sys-corner-extra-small)) + 4px
+      );
+      transform: translate(calc(-100% - var(--ngxMatInputTel-gap, 32px)));
+      border-radius: var(
+        --mat-form-field-outlined-container-shape,
+        var(--mat-sys-corner-extra-small)
+      );
+      outline: none;
+
+      &:focus {
+        border-color: var(--mat-form-field-outlined-focus-outline-color, var(--mat-sys-primary));
+      }
+    }
   }
 
   .country-selector-code {

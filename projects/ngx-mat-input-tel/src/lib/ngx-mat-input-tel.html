@@ -4,6 +4,7 @@
     matRipple
     [matMenuTriggerFor]="menu"
     class="country-selector"
+    [class.separate]="separateDialCode"
     [disabled]="disabled"
     (menuOpened)="onMenuOpened()"
     [attr.aria-label]="ariaLabel"

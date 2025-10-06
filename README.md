@@ -99,23 +99,24 @@ If you want to show the sample number for the country selected or errors , use m
 
 ## Inputs
 
-| Options            | Type                      | Default          | Description                                                                         |
-| ------------------ | ------------------------- | ---------------- | ----------------------------------------------------------------------------------- |
-| ariaLabel          | `string`                  | `Select country` | Aria label for the country selector button                                          |
-| autocomplete       | `off` \| `tel`            | `off`            | For input autocompletion                                                            |
-| cssClass           | `string`                  | `undefined`      | If input custom class are needed                                                    |
-| countriesName      | `Record<string, string>`  | `COUNTRIES_NAME` | For using different country names in the dropdown (Eg. Multilingual website)        |
-| defaultCountry     | `CountryCode`             | `undefined`      | Default country code                                                                |
-| enablePlaceholder  | `boolean`                 | `false`          | Input placeholder text, which adapts to the country selected.                       |
-| enableSearch       | `boolean`                 | `false`          | Whether to display a search bar to help filter down the list of countries           |
-| format             | `string` \*\*\*\*         | `default`        | Format of "as you type" input. Possible values: national, international, default    |
-| maxLength          | `number`                  | `15`             | max length of the input.                                                            |
-| onlyCountries      | `string[]`                | `[]`             | List of manually selected country abbreviations, which will appear in the dropdown. |
-| placeholder        | `string`                  | `undefined`      | Placeholder for the input component.                                                |
-| preferredCountries | `string[]`                | `[]`             | List of country abbreviations, which will appear at the top.                        |
-| resetOnChange      | `boolean`                 | `false`          | Reset input on country change                                                       |
-| searchPlaceholder  | `string`                  | `Search ...`     | Placeholder for the search input                                                    |
-| validation         | `isPossible` \| `isValid` | `isValid`        | Change the validation type                                                          |
+| Options            | Type                      | Default          | Description                                                                                                    |
+| ------------------ | ------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------- |
+| ariaLabel          | `string`                  | `Select country` | Aria label for the country selector button                                                                     |
+| autocomplete       | `off` \| `tel`            | `off`            | For input autocompletion                                                                                       |
+| cssClass           | `string`                  | `undefined`      | If input custom class are needed                                                                               |
+| countriesName      | `Record<string, string>`  | `COUNTRIES_NAME` | For using different country names in the dropdown (Eg. Multilingual website)                                   |
+| defaultCountry     | `CountryCode`             | `undefined`      | Default country code                                                                                           |
+| enablePlaceholder  | `boolean`                 | `false`          | Input placeholder text, which adapts to the country selected.                                                  |
+| enableSearch       | `boolean`                 | `false`          | Whether to display a search bar to help filter down the list of countries                                      |
+| format             | `string` \*\*\*\*         | `default`        | Format of "as you type" input. Possible values: national, international, default                               |
+| maxLength          | `number`                  | `15`             | max length of the input.                                                                                       |
+| onlyCountries      | `string[]`                | `[]`             | List of manually selected country abbreviations, which will appear in the dropdown.                            |
+| placeholder        | `string`                  | `undefined`      | Placeholder for the input component.                                                                           |
+| preferredCountries | `string[]`                | `[]`             | List of country abbreviations, which will appear at the top.                                                   |
+| resetOnChange      | `boolean`                 | `false`          | Reset input on country change                                                                                  |
+| searchPlaceholder  | `string`                  | `Search ...`     | Placeholder for the search input                                                                               |
+| validation         | `isPossible` \| `isValid` | `isValid`        | Change the validation type                                                                                     |
+| separateDialCode   | `boolean`                 | `false`          | Whether to separate the dial code from the input _Note: you'll have to manually add margin-left to your input_ |
 
 ## Outputs
 
@@ -125,13 +126,14 @@ If you want to show the sample number for the country selected or errors , use m
 
 ## Css variable
 
-| Name                                   | Default        | Explanation                                                                   |
-| -------------------------------------- | -------------- | ----------------------------------------------------------------------------- |
-| `--ngxMatInputTel-opacity`             | `0`            | If you wish both, the country flag and the placeholder to be shown by default |
-| `--ngxMatInputTel-selector-opacity`    | `0`            | If you wish the country flag to be shown by default                           |
-| `--ngxMatInputTel-placeholder-opacity` | `0`            | If you wish the placeholder flag to be shown by default                       |
-| `--ngxMatInputTel-flag-display`        | `inline-block` | If you wish to hide the country flag                                          |
-| `--ngxMatInputTel-menu-flag-display`   | `inline-block` | If you wish to hide the country flag inside the menu only                     |
+| Name                                   | Default        | Explanation                                                                                             |
+| -------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------- |
+| `--ngxMatInputTel-opacity`             | `0`            | If you wish both, the country flag and the placeholder to be shown by default                           |
+| `--ngxMatInputTel-selector-opacity`    | `0`            | If you wish the country flag to be shown by default                                                     |
+| `--ngxMatInputTel-placeholder-opacity` | `0`            | If you wish the placeholder flag to be shown by default                                                 |
+| `--ngxMatInputTel-flag-display`        | `inline-block` | If you wish to hide the country flag                                                                    |
+| `--ngxMatInputTel-menu-flag-display`   | `inline-block` | If you wish to hide the country flag inside the menu only                                               |
+| `--ngxMatInputTel-gap`                 | `32px`         | If you wish to change the gap between the flag and the input field (Only works with `separateDialCode`) |
 
 ## Validator
 

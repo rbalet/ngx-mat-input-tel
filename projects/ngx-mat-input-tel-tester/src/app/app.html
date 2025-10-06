@@ -2,7 +2,7 @@
   <h3 id="phoneInput">Test International Telephone Input Form</h3>
   <br />
 
-  <form #f="ngForm" [formGroup]="phoneForm" (ngSubmit)="onSubmit()">
+  <form #f1="ngForm" [formGroup]="phoneForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <ngx-mat-input-tel
         [cssClass]="'custom'"
@@ -20,7 +20,7 @@
       @if (phoneForm.controls.phone.errors?.required) {
         <mat-error> Required Field </mat-error>
       }
-      @if (f.submitted && phoneForm.controls.phone.errors?.validatePhoneNumber) {
+      @if (f1.submitted && phoneForm.controls.phone.errors?.validatePhoneNumber) {
         <mat-error> Invalid Number </mat-error>
       }
       @if (phoneForm.controls.phone.errors?.maxlength) {
@@ -64,8 +64,8 @@
 
   <mat-divider></mat-divider>
 
-  <form #f1="ngForm" [formGroup]="profileForm" class="second-form">
-    <h2>Required & PlaceHolder</h2>
+  <form #f2="ngForm" [formGroup]="profileForm" class="second-form">
+    <h2>Required, PlaceHolder & Separated</h2>
 
     <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>Phone</mat-label>
@@ -93,8 +93,24 @@
 
   <div class="value-container">
     <strong>Form value:</strong>
-    <pre><code>{{ f1.form.value | json }}</code></pre>
+    <pre><code>{{ f2.form.value | json }}</code></pre>
   </div>
+
+  <mat-divider></mat-divider>
+
+  <form [formGroup]="profileForm" class="second-form">
+    <h2>Separated Dial Code</h2>
+
+    <mat-form-field floatLabel="always" appearance="outline" class="separated-flag">
+      <mat-label>Phone</mat-label>
+      <ngx-mat-input-tel
+        resetOnChange
+        placeholder="Your number"
+        enableSearch
+        separateDialCode
+      ></ngx-mat-input-tel>
+    </mat-form-field>
+  </form>
 
   <mat-divider></mat-divider>
 
