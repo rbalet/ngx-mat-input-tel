@@ -115,6 +115,7 @@ If you want to show the sample number for the country selected or errors , use m
 | preferredCountries | `string[]`                | `[]`             | List of country abbreviations, which will appear at the top.                                                   |
 | resetOnChange      | `boolean`                 | `false`          | Reset input on country change                                                                                  |
 | searchPlaceholder  | `string`                  | `Search ...`     | Placeholder for the search input                                                                               |
+| showAreaCodes      | `boolean`                 | `true`           | Show the Area codes in the country dropdown selection                                                          |
 | validation         | `isPossible` \| `isValid` | `isValid`        | Change the validation type                                                                                     |
 | separateDialCode   | `boolean`                 | `false`          | Whether to separate the dial code from the input _Note: you'll have to manually add margin-left to your input_ |
 
