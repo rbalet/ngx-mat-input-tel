@@ -144,7 +144,7 @@ export class NgxMatInputTelComponent
   @Input({ transform: booleanAttribute }) enableSearch = false
   @Input({ transform: booleanAttribute }) resetOnChange = false
   @Input({ transform: booleanAttribute }) separateDialCode = false
-  @Input({ transform: booleanAttribute }) showAreaCodes = true
+  @Input({ transform: booleanAttribute }) hideAreaCodes = false
 
   private _format: PhoneNumberFormat = 'default'
   @Input() set format(value: PhoneNumberFormat) {
@@ -452,7 +452,7 @@ export class NgxMatInputTelComponent
         iso2: iso2,
         dialCode: codes[0].toString(),
         priority: +codes || 0,
-        areaCodes: this.showAreaCodes && codes.length > 2 && Array.isArray(codes[2]) ? codes[2] : undefined,
+        areaCodes: !this.hideAreaCodes && codes.length > 2 && Array.isArray(codes[2]) ? codes[2] : undefined,
         placeholder: '',
       }
       if (this.enablePlaceholder) {

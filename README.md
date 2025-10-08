@@ -109,13 +109,13 @@ If you want to show the sample number for the country selected or errors , use m
 | enablePlaceholder  | `boolean`                 | `false`          | Input placeholder text, which adapts to the country selected.                                                  |
 | enableSearch       | `boolean`                 | `false`          | Whether to display a search bar to help filter down the list of countries                                      |
 | format             | `string` \*\*\*\*         | `default`        | Format of "as you type" input. Possible values: national, international, default                               |
+| hideAreaCodes      | `boolean`                 | `false`          | Hide the Area codes in the country dropdown selection                                                          |
 | maxLength          | `number`                  | `15`             | max length of the input.                                                                                       |
 | onlyCountries      | `string[]`                | `[]`             | List of manually selected country abbreviations, which will appear in the dropdown.                            |
 | placeholder        | `string`                  | `undefined`      | Placeholder for the input component.                                                                           |
 | preferredCountries | `string[]`                | `[]`             | List of country abbreviations, which will appear at the top.                                                   |
 | resetOnChange      | `boolean`                 | `false`          | Reset input on country change                                                                                  |
 | searchPlaceholder  | `string`                  | `Search ...`     | Placeholder for the search input                                                                               |
-| showAreaCodes      | `boolean`                 | `true`           | Show the Area codes in the country dropdown selection                                                          |
 | validation         | `isPossible` \| `isValid` | `isValid`        | Change the validation type                                                                                     |
 | separateDialCode   | `boolean`                 | `false`          | Whether to separate the dial code from the input _Note: you'll have to manually add margin-left to your input_ |
 

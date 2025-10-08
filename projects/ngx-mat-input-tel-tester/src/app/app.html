@@ -119,23 +119,4 @@
 
     <button mat-raised-button (click)="openDialog()">Open Dialog</button>
   </div>
-
-  <mat-divider> </mat-divider>
-  
-  <form #f2="ngForm" [formGroup]="profileForm" class="second-form">
-    <h2>Area Codes hidden in dropdown/search</h2>
-
-    <mat-form-field floatLabel="always" appearance="outline">
-      <mat-label>Phone</mat-label>
-      <ngx-mat-input-tel
-        [preferredCountries]="['US', 'CA']"
-        [formControl]="profileForm.controls.phone"
-        placeholder="No Area Codes"
-        enableSearch
-        [showAreaCodes]="false"
-        #phoneAreaCodes
-      ></ngx-mat-input-tel>
-    </mat-form-field>
-  </form>
-
 </div>
