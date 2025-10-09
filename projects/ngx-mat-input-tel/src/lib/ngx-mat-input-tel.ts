@@ -309,13 +309,15 @@ export class NgxMatInputTelComponent
   private _setDefaultCountry() {
     let country: Country
 
+    const preferredCountries = this.$preferredCountriesInDropDown()
+
     if (this.numberInstance?.country) {
       // If an existing number is present, we use it to determine country
       country = this.getCountry(this.numberInstance.country)
     } else if (this.defaultCountry) {
       country = this.getCountry(this.defaultCountry)
-    } else if (this.$preferredCountriesInDropDown().length) {
-      country = this.$preferredCountriesInDropDown()[0]
+    } else if (Object.keys(preferredCountries).length) {
+      country = Object.values(preferredCountries)[0]
     } else {
       const firstKeyValue = Object.entries(this._allCountries)[0]
       country = { ...firstKeyValue[1], iso2: firstKeyValue[0] }
