@@ -109,6 +109,7 @@ If you want to show the sample number for the country selected or errors , use m
 | enablePlaceholder  | `boolean`                 | `false`          | Input placeholder text, which adapts to the country selected.                                                  |
 | enableSearch       | `boolean`                 | `false`          | Whether to display a search bar to help filter down the list of countries                                      |
 | format             | `string` \*\*\*\*         | `default`        | Format of "as you type" input. Possible values: national, international, default                               |
+| hideAreaCodes      | `boolean`                 | `false`          | Hide the Area codes in the country dropdown selection                                                          |
 | maxLength          | `number`                  | `15`             | max length of the input.                                                                                       |
 | onlyCountries      | `string[]`                | `[]`             | List of manually selected country abbreviations, which will appear in the dropdown.                            |
 | placeholder        | `string`                  | `undefined`      | Placeholder for the input component.                                                                           |
