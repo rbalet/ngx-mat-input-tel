@@ -7,13 +7,17 @@ An Angular Material package for entering and validating international telephone 
 ![npm bundle size](https://img.shields.io/bundlephobia/min/ngx-mat-input-tel)
 ![npm](https://img.shields.io/npm/dm/ngx-mat-input-tel)
 
+<p align="center" style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+  <img src="https://raw.githubusercontent.com/rbalet/ngx-mat-input-tel/main/example-1.png" />
+</p>
+
 ## Demo
 
 - https://stackblitz.com/~/github.com/rbalet/ngx-mat-input-tel
 
 ## Caution
 
-This is a fork from the [ngx-mat-intl-tel-input](https://github.com/tanansatpal/ngx-mat-intl-tel-input) library whish does not seems to be maintained anymore. _Last commit is over a year_
+This is a fork from the [ngx-mat-intl-tel-input](https://github.com/tanansatpal/ngx-mat-intl-tel-input) library whish is not maintained anymore.
 
 **Supports:**
 
