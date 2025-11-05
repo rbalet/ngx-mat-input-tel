@@ -19,16 +19,14 @@
       <mat-hint>e.g. {{ phone.$selectedCountry().placeholder }}</mat-hint>
       @if (phoneForm.controls.phone.errors?.required) {
         <mat-error> Required Field </mat-error>
-      }
-      @if (f1.submitted && phoneForm.controls.phone.errors?.validatePhoneNumber) {
-        <mat-error> Invalid Number </mat-error>
-      }
-      @if (phoneForm.controls.phone.errors?.maxlength) {
+      } @else if (phoneForm.controls.phone.errors?.maxlength) {
         <mat-error>
           Length:{{ phoneForm.controls.phone.errors?.maxlength.actualLength }}/{{
             phoneForm.controls.phone.errors?.maxlength.requiredLength
           }}
         </mat-error>
+      } @else if (f1.submitted && phoneForm.controls.phone.errors?.validatePhoneNumber) {
+        <mat-error> Invalid Number </mat-error>
       }
     </mat-form-field>
 
