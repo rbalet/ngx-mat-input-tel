@@ -376,7 +376,11 @@ export class NgxMatInputTelComponent
       this.phoneNumber.toString(),
       this.$selectedCountry().iso2.toUpperCase() as CC,
     )
-    if (!numberInstance) return
+    if (!numberInstance) {
+      // Single digit or invalid number
+      this.value = this.phoneNumber.toString()
+      return
+    }
     this.numberInstance = numberInstance
 
     this.formatAsYouTypeIfEnabled()
