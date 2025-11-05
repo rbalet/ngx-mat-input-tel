@@ -13,7 +13,7 @@ export const ngxMatInputTelValidator = (control: AbstractControl): ValidationErr
       return error
     }
 
-    if ((control.value || numberInstance) && !numberInstance?.isValid()) {
+    if (control.value?.length <= 1 || (numberInstance && !numberInstance?.isValid())) {
       if (!control.touched) {
         control.markAsTouched()
       }
