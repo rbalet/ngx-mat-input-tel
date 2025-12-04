@@ -190,12 +190,21 @@ export class NgxMatInputTelComponent
   private _allCountries: Record<string, Country> = {}
   $availableCountries = signal<Record<string, Country>>(this._initAllCountries())
   $selectableCountries = computed(() => {
-    if (!this.$searchCriteria() || this.$searchCriteria() === '') return this.$availableCountries()
+    let countries: Record<string, Country> = {}
+    // Note: filter selectableCountries from the $selectablePreferredCountriesInDropDown()
+    if (!this.$searchCriteria() || this.$searchCriteria() === '')
+      countries = this.$availableCountries()
+    else
+      countries = this._getOnSearchCountries(
+        this.$searchCriteria().toLowerCase(),
+        this.$availableCountries(),
+      )
 
-    return this._getOnSearchCountries(
-      this.$searchCriteria().toLowerCase(),
-      this.$availableCountries(),
-    )
+    for (const iso2 of Object.keys(this.$preferredCountriesInDropDown())) {
+      delete countries[iso2]
+    }
+
+    return countries
   })
   $preferredCountriesInDropDown = signal<Record<string, Country>>({})
   $selectablePreferredCountriesInDropDown = computed(() => {
@@ -458,7 +467,8 @@ export class NgxMatInputTelComponent
         iso2: iso2,
         dialCode: codes[0].toString(),
         priority: +codes || 0,
-        areaCodes: !this.hideAreaCodes && codes.length > 2 && Array.isArray(codes[2]) ? codes[2] : undefined,
+        areaCodes:
+          !this.hideAreaCodes && codes.length > 2 && Array.isArray(codes[2]) ? codes[2] : undefined,
         placeholder: '',
       }
       if (this.enablePlaceholder) {
