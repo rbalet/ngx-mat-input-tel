@@ -259,7 +259,6 @@ export class NgxMatInputTelComponent
   }
 
   ngOnInit() {
-    this.$availableCountries.set(this._initAllCountries())
     this._setPreferredCountriesInDropDown()
     this._setDefaultCountry()
 
