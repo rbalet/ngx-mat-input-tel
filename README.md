@@ -98,6 +98,9 @@ If you want to show the sample number for the country selected or errors , use m
   <mat-error *ngIf="f.form.controls['phone']?.errors?.validatePhoneNumber"
     >Invalid Number</mat-error
   >
+  <mat-error *ngIf="f.form.controls['phone']?.errors?.invalidCountry"
+    >Country not allowed</mat-error
+  >
 </form>
 ```
 
@@ -147,6 +150,15 @@ In case you had to manually remove the validator, the library exported it so you
 | Name                      | Description                                     | Example                                                |
 | ------------------------- | ----------------------------------------------- | ------------------------------------------------------ |
 | `ngxMatInputTelValidator` | The actual phone validator used for the control | `phoneControl.addValidators([ngxMatInputTlValidator])` |
+
+## Validation Errors
+
+The component may set the following validation errors on the form control:
+
+| Error Name            | Description                                                                   | When it occurs                                                         |
+| --------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `validatePhoneNumber` | The phone number is invalid according to libphonenumber-js validation         | When the entered phone number is not valid for the selected country    |
+| `invalidCountry`      | The country detected from the phone number is not in the `onlyCountries` list | When a user enters a phone number from a country not in the allow list |
 
 ## Library Contributions
 
