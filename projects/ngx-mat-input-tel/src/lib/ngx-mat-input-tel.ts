@@ -27,6 +27,9 @@ import {
   NgControl,
   NgForm,
   ReactiveFormsModule,
+  Validator,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms'
 import { ErrorStateMatcher, MatRippleModule } from '@angular/material/core'
 import { MatDialog, MatDialogModule } from '@angular/material/dialog'
@@ -52,7 +55,7 @@ import {
   NgxMatInputTelDialogData,
 } from './ngx-mat-input-tel-dialog/ngx-mat-input-tel.dialog'
 import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag'
-import { ngxMatInputTelValidator } from './ngx-mat-input-tel.validator'
+import { ngxMatInputTelValidator, createOnlyCountriesValidator } from './ngx-mat-input-tel.validator'
 import { RemoveIsoPipe } from './remove-iso.pipe'
 
 class ngxMatInputTelBase {
@@ -73,6 +76,11 @@ class ngxMatInputTelBase {
     {
       provide: NG_VALIDATORS,
       useValue: ngxMatInputTelValidator,
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: NgxMatInputTelComponent,
       multi: true,
     },
   ],
@@ -99,7 +107,7 @@ class ngxMatInputTelBase {
 })
 export class NgxMatInputTelComponent
   extends ngxMatInputTelBase
-  implements OnInit, DoCheck, OnDestroy
+  implements OnInit, DoCheck, OnDestroy, Validator
 {
   static nextId = 0
   @ViewChild('focusable', { static: false }) focusable!: ElementRef
@@ -189,7 +197,7 @@ export class NgxMatInputTelComponent
   describedBy = ''
   phoneNumber?: E164Number | NationalNumber = '' as E164Number | NationalNumber
   private _allCountries: Record<string, Country> = {}
-  private _allCountriesCount = 0
+  _allCountriesCount = 0
   $availableCountries = signal<Record<string, Country>>(this._initAllCountries())
   $preferredCountriesInDropDown = signal<Record<string, Country>>({})
   $selectedCountry = signal<Country>({} as Country)
@@ -240,6 +248,40 @@ export class NgxMatInputTelComponent
   ngOnDestroy() {
     this.stateChanges.complete()
     this._focusMonitor.stopMonitoring(this._elementRef)
+  }
+
+  // Validator interface implementation
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null
+    }
+
+    try {
+      const numberInstance = parsePhoneNumberFromString(control.value)
+      
+      if (!numberInstance || !numberInstance.country) {
+        return null
+      }
+
+      const availableCountries = this.$availableCountries()
+      const detectedCountry = numberInstance.country
+      
+      // If no restrictions (all countries available), any country is allowed
+      if (Object.keys(availableCountries).length === this._allCountriesCount) {
+        return null
+      }
+      
+      // Check if the detected country is in the available countries list
+      const isAllowed = detectedCountry.toUpperCase() in availableCountries
+      
+      if (!isAllowed) {
+        return { invalidCountry: true }
+      }
+      
+      return null
+    } catch (e) {
+      return null
+    }
   }
 
   ngDoCheck(): void {
@@ -355,31 +397,6 @@ export class NgxMatInputTelComponent
     return countryCode.toUpperCase() in availableCountries
   }
 
-  private _updateValidationError(): void {
-    if (!this.ngControl || !this.ngControl.control) {
-      return
-    }
-
-    const currentErrors = this.ngControl.control.errors || {}
-    
-    if (this.$isCountryInvalid()) {
-      // Set the invalidCountry error
-      this.ngControl.control.setErrors({
-        ...currentErrors,
-        invalidCountry: true,
-      })
-    } else {
-      // Remove the invalidCountry error if it exists
-      if ('invalidCountry' in currentErrors) {
-        const newErrors = { ...currentErrors }
-        delete newErrors['invalidCountry']
-        this.ngControl.control.setErrors(
-          Object.keys(newErrors).length > 0 ? newErrors : null
-        )
-      }
-    }
-  }
-
   public onPhoneNumberChange(): void {
     try {
       this._setCountry()
@@ -396,7 +413,10 @@ export class NgxMatInputTelComponent
     if (!this.phoneNumber) {
       this.value = null
       this.$isCountryInvalid.set(false)
-      this._updateValidationError()
+      // Trigger validation after state change
+      if (this.ngControl?.control) {
+        this.ngControl.control.updateValueAndValidity()
+      }
       return
     }
 
@@ -435,7 +455,11 @@ export class NgxMatInputTelComponent
         // Check if the detected country is allowed
         const isAllowed = this._isCountryAllowed(this.numberInstance.country)
         this.$isCountryInvalid.set(!isAllowed)
-        this._updateValidationError()
+        
+        // Trigger validation after state change
+        if (this.ngControl?.control) {
+          this.ngControl.control.updateValueAndValidity()
+        }
       }
     }
   }
@@ -457,9 +481,13 @@ export class NgxMatInputTelComponent
     // Clear the invalid country state when user manually selects
     // (manual selections from dialog are always from available countries)
     this.$isCountryInvalid.set(false)
-    this._updateValidationError()
 
     this.onPhoneNumberChange()
+    
+    // Trigger validation after state change and after onPhoneNumberChange
+    if (this.ngControl?.control) {
+      this.ngControl.control.updateValueAndValidity()
+    }
 
     setTimeout(() => {
       this.focusable.nativeElement.focus()

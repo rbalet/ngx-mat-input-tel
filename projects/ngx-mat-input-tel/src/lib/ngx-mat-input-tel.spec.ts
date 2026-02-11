@@ -123,6 +123,8 @@ describe('NgxMatInputTelComponent', () => {
     beforeEach(() => {
       // Set up ngControl for validation tests
       const formControl = new FormControl()
+      // Manually add the component as a validator
+      formControl.addValidators(component.validate.bind(component))
       component.ngControl = {
         control: formControl,
       } as any
@@ -136,6 +138,7 @@ describe('NgxMatInputTelComponent', () => {
 
       // Type Switzerland number (+41) - valid Swiss number
       component.phoneNumber = '+41 44 668 18 00' as any
+      component.ngControl.control!.setValue('+41 44 668 18 00')
       component.onPhoneNumberChange()
       fixture.detectChanges()
 
@@ -152,6 +155,7 @@ describe('NgxMatInputTelComponent', () => {
 
       // Type France number (+33) - valid French number
       component.phoneNumber = '+33 1 42 86 82 00' as any
+      component.ngControl.control!.setValue('+33 1 42 86 82 00')
       component.onPhoneNumberChange()
       fixture.detectChanges()
 
@@ -168,13 +172,18 @@ describe('NgxMatInputTelComponent', () => {
 
       // First, type a disallowed country - valid Swiss number
       component.phoneNumber = '+41 44 668 18 00' as any
+      component.ngControl.control!.setValue('+41 44 668 18 00')
       component.onPhoneNumberChange()
       fixture.detectChanges()
       expect(component.$isCountryInvalid()).toBe(true)
 
-      // Now manually select France
+      // Now manually select France and enter a valid French number
       const france = component.$availableCountries()['FR']
       component.onCountrySelect({ key: 'FR', value: france })
+      // Set a valid French number
+      component.phoneNumber = '+33 1 42 86 82 00' as any
+      component.ngControl.control!.setValue('+33 1 42 86 82 00')
+      component.onPhoneNumberChange()
       fixture.detectChanges()
 
       // Should clear the invalid state
@@ -186,6 +195,7 @@ describe('NgxMatInputTelComponent', () => {
     it('should allow any country when onlyCountries is not set', () => {
       // Don't set onlyCountries (all countries available)
       component.phoneNumber = '+41 44 668 18 00' as any
+      component.ngControl.control!.setValue('+41 44 668 18 00')
       component.onPhoneNumberChange()
       fixture.detectChanges()
 
@@ -202,12 +212,14 @@ describe('NgxMatInputTelComponent', () => {
 
       // Type Switzerland number - valid Swiss number
       component.phoneNumber = '+41 44 668 18 00' as any
+      component.ngControl.control!.setValue('+41 44 668 18 00')
       component.onPhoneNumberChange()
       fixture.detectChanges()
       expect(component.$isCountryInvalid()).toBe(true)
 
       // Clear the phone number
       component.phoneNumber = '' as any
+      component.ngControl.control!.setValue('')
       component.onPhoneNumberChange()
       fixture.detectChanges()
 
