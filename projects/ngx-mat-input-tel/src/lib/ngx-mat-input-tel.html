@@ -28,7 +28,7 @@
     name="tel"
     [autocomplete]="autocomplete"
     [ngClass]="cssClass"
-    (blur)="onTouched(); onPhoneInputBlur()"
+    (blur)="onPhoneInputBlurAndTouch()"
     (focus)="onPhoneInputFocus()"
     (keypress)="onInputKeyPress($event)"
     [(ngModel)]="phoneNumber"

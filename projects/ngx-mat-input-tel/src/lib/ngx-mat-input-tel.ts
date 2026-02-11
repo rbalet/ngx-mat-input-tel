@@ -473,6 +473,11 @@ export class NgxMatInputTelComponent
     }
   }
 
+  public onPhoneInputBlurAndTouch(): void {
+    this.onTouched()
+    this.onPhoneInputBlur()
+  }
+
   protected _initAllCountries(): Record<string, Country> {
     this._allCountries = {}
     Object.entries(COUNTRIES_CODE).forEach(([iso2, codes]) => {
