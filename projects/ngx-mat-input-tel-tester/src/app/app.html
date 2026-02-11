@@ -86,6 +86,9 @@
       @if (profileForm.controls.phone.errors?.validatePhoneNumber) {
         <mat-error> Invalid Number </mat-error>
       }
+      @if (profileForm.controls.phone.errors?.invalidCountry) {
+        <mat-error> Country not allowed </mat-error>
+      }
     </mat-form-field>
   </form>
 

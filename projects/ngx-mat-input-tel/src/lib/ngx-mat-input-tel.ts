@@ -23,10 +23,9 @@ import {
   FormControl,
   FormGroupDirective,
   FormsModule,
-  NG_VALIDATORS,
   NgControl,
   NgForm,
-  ReactiveFormsModule,
+  ReactiveFormsModule
 } from '@angular/forms'
 import { ErrorStateMatcher, MatRippleModule } from '@angular/material/core'
 import { MatDialog, MatDialogModule } from '@angular/material/dialog'
@@ -52,7 +51,7 @@ import {
   NgxMatInputTelDialogData,
 } from './ngx-mat-input-tel-dialog/ngx-mat-input-tel.dialog'
 import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag'
-import { ngxMatInputTelValidator } from './ngx-mat-input-tel.validator'
+import { ngxMatInputTelValidatorFactory } from './ngx-mat-input-tel.validator'
 import { RemoveIsoPipe } from './remove-iso.pipe'
 
 class ngxMatInputTelBase {
@@ -66,15 +65,10 @@ class ngxMatInputTelBase {
 
 @Component({
   selector: 'ngx-mat-input-tel',
-  templateUrl: './ngx-mat-input-tel.html',
+templateUrl: './ngx-mat-input-tel.html',
   styleUrls: ['./ngx-mat-input-tel.scss'],
   providers: [
     { provide: MatFormFieldControl, useExisting: NgxMatInputTelComponent },
-    {
-      provide: NG_VALIDATORS,
-      useValue: ngxMatInputTelValidator,
-      multi: true,
-    },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -127,14 +121,24 @@ export class NgxMatInputTelComponent
     this._preferredCountries = value.map((v) => v.toUpperCase())
   }
 
+  private _onlyCountries: string[] = []
   @Input() set onlyCountries(countryCodes: string[]) {
     if (countryCodes.length) {
       const codes = countryCodes.map((c) => c.toUpperCase())
       this.$availableCountries.set(this._getFilteredCountries(codes))
+      this._onlyCountries = codes
+    } else {
+      this._onlyCountries = []
     }
 
     this._setPreferredCountriesInDropDown()
     this._setDefaultCountry()
+
+    // Update validator when onlyCountries changes
+    if (this.ngControl && this.ngControl.control) {
+      this.ngControl.control.setValidators(ngxMatInputTelValidatorFactory(this._onlyCountries));
+      this.ngControl.control.updateValueAndValidity();
+    }
   }
 
   @Input() searchPlaceholder = 'Search ...'

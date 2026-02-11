@@ -80,7 +80,7 @@ Refer to main app in this repository for working example.
 
 ```
 
-If you want to show the sample number for the country selected or errors , use mat-hint anf mat-error as
+If you want to show the sample number for the country selected or errors, use mat-hint and mat-error as
 
 ```html
 <form #f="ngForm" [formGroup]="phoneForm">
@@ -98,6 +98,9 @@ If you want to show the sample number for the country selected or errors , use m
   <mat-error *ngIf="f.form.controls['phone']?.errors?.validatePhoneNumber"
     >Invalid Number</mat-error
   >
+  <mat-error *ngIf="f.form.controls['phone']?.errors?.countryNotAllowed">
+    Country not allowed
+  </mat-error>
 </form>
 ```
 
@@ -142,11 +145,13 @@ If you want to show the sample number for the country selected or errors , use m
 
 ## Validator
 
-In case you had to manually remove the validator, the library exported it so you could add it back again.
+#### Manual validator usage
 
-| Name                      | Description                                     | Example                                                |
-| ------------------------- | ----------------------------------------------- | ------------------------------------------------------ |
-| `ngxMatInputTelValidator` | The actual phone validator used for the control | `phoneControl.addValidators([ngxMatInputTlValidator])` |
+If you need to manually add the validator, use the factory:
+
+| Name                             | Description                                         | Example                                                                     |
+| -------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------- |
+| `ngxMatInputTelValidatorFactory` | Validator factory for phone and country restriction | `phoneControl.addValidators([ngxMatInputTelValidatorFactory(['US','GB'])])` |
 
 ## Library Contributions
 
