@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatInputModule } from '@angular/material/input'
+import { E164Number, NationalNumber } from 'libphonenumber-js'
 import { NgxMatInputTelComponent } from './ngx-mat-input-tel'
 
 describe('NgxMatInputTelComponent', () => {
@@ -179,7 +180,7 @@ describe('NgxMatInputTelComponent', () => {
 
       // writeValue with null/undefined/empty triggers onPhoneNumberChange
       // which calls _setCountry. If phoneNumber is cleared manually, value becomes null
-      component.phoneNumber = '' as any
+      component.phoneNumber = '' as E164Number | NationalNumber
       component.onPhoneNumberChange()
       fixture.detectChanges()
 
@@ -191,7 +192,7 @@ describe('NgxMatInputTelComponent', () => {
       const mockCallback = jasmine.createSpy('onChange')
       component.registerOnChange(mockCallback)
 
-      component.phoneNumber = '+33123456789' as any
+      component.phoneNumber = '+33123456789' as E164Number | NationalNumber
       component.onPhoneNumberChange()
 
       expect(mockCallback).toHaveBeenCalled()
