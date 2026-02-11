@@ -2,7 +2,7 @@
   <div class="dialog-header">
     <h2 mat-dialog-title>{{ data.ariaLabel }}</h2>
     <button
-      mat-icon-button
+      matIconButton
       type="button"
       class="close-button"
       (click)="onClose()"
@@ -27,7 +27,7 @@
         @if ($searchCriteria()) {
           <button
             matSuffix
-            mat-icon-button
+            matIconButton
             type="button"
             aria-label="Clear search"
             (click)="$searchCriteria.set('')"

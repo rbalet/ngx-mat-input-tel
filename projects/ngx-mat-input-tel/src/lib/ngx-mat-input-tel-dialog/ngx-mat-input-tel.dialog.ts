@@ -1,12 +1,8 @@
 import { KeyValuePipe } from '@angular/common'
-import { Component, Inject, OnInit, ViewChild, ElementRef, computed, signal } from '@angular/core'
+import { Component, ElementRef, Inject, OnInit, ViewChild, computed, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog'
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
@@ -15,7 +11,7 @@ import { MatListModule } from '@angular/material/list'
 import { Country } from '../model/country.model'
 import { NgxMatInputTelFlagComponent } from '../ngx-mat-input-tel-flag/ngx-mat-input-tel-flag'
 
-export interface CountrySelectDialogData {
+export interface NgxMatInputTelDialogData {
   selectedCountry: Country
   availableCountries: Record<string, Country>
   preferredCountriesInDropDown: Record<string, Country>
@@ -25,23 +21,28 @@ export interface CountrySelectDialogData {
 }
 
 @Component({
-  selector: 'ngx-mat-country-select-dialog',
-  templateUrl: './country-select-dialog.component.html',
-  styleUrls: ['./country-select-dialog.component.scss'],
+  selector: 'ngx-mat-input-tel-dialog',
+  templateUrl: './ngx-mat-input-tel.dialog.html',
+  styleUrls: ['./ngx-mat-input-tel.dialog.scss'],
   imports: [
+    // Forms
     FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+
+    // Mat
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatListModule,
     MatDividerModule,
     KeyValuePipe,
+
+    // Components
     NgxMatInputTelFlagComponent,
   ],
 })
-export class CountrySelectDialogComponent implements OnInit {
+export class NgxMatInputTelDialog implements OnInit {
   @ViewChild('searchInput', { static: false }) searchInput?: ElementRef<HTMLInputElement>
 
   $searchCriteria = signal<string>('')
@@ -88,8 +89,8 @@ export class CountrySelectDialogComponent implements OnInit {
   })
 
   constructor(
-    public dialogRef: MatDialogRef<CountrySelectDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: CountrySelectDialogData,
+    public dialogRef: MatDialogRef<NgxMatInputTelDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: NgxMatInputTelDialogData,
   ) {}
 
   ngOnInit(): void {

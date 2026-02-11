@@ -1,0 +1,90 @@
+:host {
+  .country-select-dialog {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    width: 100%;
+  }
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px 0 24px;
+    min-height: 64px;
+
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .close-button {
+      flex-shrink: 0;
+    }
+  }
+
+  mat-dialog-content {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(80vh - 64px);
+  }
+
+  .search-field {
+    width: 100%;
+    margin: 0;
+    padding: 8px 24px;
+    box-sizing: border-box;
+  }
+
+  .country-list-container {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 200px;
+    max-height: calc(80vh - 64px - 80px);
+  }
+
+  .country-list-item {
+    cursor: pointer;
+    min-height: 48px;
+    padding: 8px 24px;
+    transition: background-color 0.2s ease;
+
+    &:hover,
+    &:focus {
+      background-color: rgba(0, 0, 0, 0.04);
+      outline: none;
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  .country-flag {
+    width: 100%;
+  }
+
+  mat-divider {
+    margin: 8px 0;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 599px) {
+    .country-select-dialog {
+      max-height: 100vh;
+    }
+
+    mat-dialog-content {
+      max-height: calc(100vh - 64px);
+    }
+
+    .country-list-container {
+      max-height: calc(100vh - 64px - 80px);
+    }
+  }
+}

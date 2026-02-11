@@ -44,13 +44,13 @@ import {
   parsePhoneNumberFromString,
 } from 'libphonenumber-js'
 import { Subject } from 'rxjs'
-import {
-  CountrySelectDialogComponent,
-  CountrySelectDialogData,
-} from './country-select-dialog/country-select-dialog.component'
 import { COUNTRIES_CODE, COUNTRIES_NAME, EXAMPLES } from './data/country-code.const'
 import { Country } from './model/country.model'
 import { PhoneNumberFormat } from './model/phone-number-format.model'
+import {
+  NgxMatInputTelDialog,
+  NgxMatInputTelDialogData,
+} from './ngx-mat-input-tel-dialog/ngx-mat-input-tel.dialog'
 import { NgxMatInputTelFlagComponent } from './ngx-mat-input-tel-flag/ngx-mat-input-tel-flag'
 import { ngxMatInputTelValidator } from './ngx-mat-input-tel.validator'
 import { RemoveIsoPipe } from './remove-iso.pipe'
@@ -259,8 +259,8 @@ export class NgxMatInputTelComponent
       return
     }
 
-    const dialogRef = this._dialog.open<CountrySelectDialogComponent, CountrySelectDialogData, Country>(
-      CountrySelectDialogComponent,
+    const dialogRef = this._dialog.open<NgxMatInputTelDialog, NgxMatInputTelDialogData, Country>(
+      NgxMatInputTelDialog,
       {
         width: '420px',
         maxWidth: '90vw',
