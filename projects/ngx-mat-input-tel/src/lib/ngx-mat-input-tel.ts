@@ -280,7 +280,7 @@ export class NgxMatInputTelComponent
 
     dialogRef.afterClosed().subscribe((selectedCountry) => {
       if (selectedCountry) {
-        // Convert to the format expected by onCountrySelect
+        // Create KeyValue-compatible structure expected by onCountrySelect
         this.onCountrySelect({
           key: selectedCountry.iso2,
           value: selectedCountry,

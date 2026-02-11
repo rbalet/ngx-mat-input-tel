@@ -58,11 +58,9 @@
             ></ngx-mat-input-tel-flag>
           </mat-list-item>
         }
-        
         @if ($showDivider()) {
           <mat-divider></mat-divider>
         }
-        
         @for (country of $selectableCountries() | keyvalue: null; track country.key) {
           <mat-list-item
             class="country-list-item"

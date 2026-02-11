@@ -45,7 +45,7 @@ export class CountrySelectDialogComponent implements OnInit {
   @ViewChild('searchInput', { static: false }) searchInput?: ElementRef<HTMLInputElement>
 
   $searchCriteria = signal<string>('')
-  
+
   $selectableCountries = computed(() => {
     let countries: Record<string, Country> = {}
     if (!this.$searchCriteria() || this.$searchCriteria() === '') {
@@ -57,12 +57,16 @@ export class CountrySelectDialogComponent implements OnInit {
       )
     }
 
-    // Remove preferred countries from the main list
-    for (const iso2 of Object.keys(this.data.preferredCountriesInDropDown)) {
-      delete countries[iso2]
+    // Remove preferred countries from the main list by creating a new object
+    const preferredKeys = Object.keys(this.data.preferredCountriesInDropDown)
+    const result: Record<string, Country> = {}
+    for (const [iso2, country] of Object.entries(countries)) {
+      if (!preferredKeys.includes(iso2)) {
+        result[iso2] = country
+      }
     }
 
-    return countries
+    return result
   })
 
   $selectablePreferredCountriesInDropDown = computed(() => {
