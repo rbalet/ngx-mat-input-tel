@@ -87,6 +87,7 @@ describe('NgxMatInputTelComponent', () => {
       expect(button.classList.contains('focused')).toBe(true)
       expect(component.isDialCodeFocused).toBe(true)
       expect(component.isPhoneInputFocused).toBe(false)
+      expect(component.focused).toBe(false) // mat-form-field should not be focused
     })
 
     it('should not have focused class on button when phone input has focus', () => {
@@ -97,6 +98,24 @@ describe('NgxMatInputTelComponent', () => {
       expect(button.classList.contains('focused')).toBe(false)
       expect(component.isDialCodeFocused).toBe(false)
       expect(component.isPhoneInputFocused).toBe(true)
+      expect(component.focused).toBe(true) // mat-form-field should be focused
+    })
+
+    it('should handle rapid focus switching between elements', () => {
+      // Focus button
+      component.onDialCodeFocus()
+      expect(component.isDialCodeFocused).toBe(true)
+      expect(component.focused).toBe(false)
+
+      // Switch to input without blur event (edge case)
+      component.onPhoneInputFocus()
+      expect(component.isPhoneInputFocused).toBe(true)
+      expect(component.focused).toBe(true)
+
+      // Now blur button
+      component.onDialCodeBlur()
+      expect(component.isDialCodeFocused).toBe(false)
+      expect(component.focused).toBe(true) // Should stay true because input is focused
     })
   })
 })
