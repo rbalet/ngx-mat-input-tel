@@ -192,6 +192,7 @@ export class NgxMatInputTelComponent
   $availableCountries = signal<Record<string, Country>>(this._initAllCountries())
   $preferredCountriesInDropDown = signal<Record<string, Country>>({})
   $selectedCountry = signal<Country>({} as Country)
+  $isCountryInvalid = signal<boolean>(false)
   numberInstance?: PhoneNumber
   value?: any
 
@@ -343,6 +344,38 @@ export class NgxMatInputTelComponent
       }, {})
   }
 
+  private _isCountryAllowed(countryCode: string): boolean {
+    const availableCountries = this.$availableCountries()
+    // If no restrictions (all countries available), any country is allowed
+    if (Object.keys(availableCountries).length === Object.keys(this._allCountries).length) {
+      return true
+    }
+    // Check if the country is in the available countries list
+    return countryCode.toUpperCase() in availableCountries
+  }
+
+  private _updateValidationError(): void {
+    if (!this.ngControl || !this.ngControl.control) {
+      return
+    }
+
+    const currentErrors = this.ngControl.control.errors || {}
+    
+    if (this.$isCountryInvalid()) {
+      // Set the invalidCountry error
+      this.ngControl.control.setErrors({
+        ...currentErrors,
+        invalidCountry: true,
+      })
+    } else {
+      // Remove the invalidCountry error if it exists
+      const { invalidCountry, ...remainingErrors } = currentErrors
+      this.ngControl.control.setErrors(
+        Object.keys(remainingErrors).length > 0 ? remainingErrors : null
+      )
+    }
+  }
+
   public onPhoneNumberChange(): void {
     try {
       this._setCountry()
@@ -358,6 +391,8 @@ export class NgxMatInputTelComponent
   private _setCountry() {
     if (!this.phoneNumber) {
       this.value = null
+      this.$isCountryInvalid.set(false)
+      this._updateValidationError()
       return
     }
 
@@ -392,6 +427,11 @@ export class NgxMatInputTelComponent
       ) {
         this.$selectedCountry.set(this.getCountry(this.numberInstance.country))
         this.countryChanged.emit(this.$selectedCountry())
+        
+        // Check if the detected country is allowed
+        const isAllowed = this._isCountryAllowed(this.numberInstance.country)
+        this.$isCountryInvalid.set(!isAllowed)
+        this._updateValidationError()
       }
     }
   }
@@ -409,6 +449,11 @@ export class NgxMatInputTelComponent
       iso2: country.key,
     })
     this.countryChanged.emit(this.$selectedCountry())
+
+    // Clear the invalid country state when user manually selects
+    // (manual selections from dialog are always from available countries)
+    this.$isCountryInvalid.set(false)
+    this._updateValidationError()
 
     this.onPhoneNumberChange()
 

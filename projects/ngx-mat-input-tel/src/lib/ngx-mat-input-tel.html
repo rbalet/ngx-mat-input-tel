@@ -8,8 +8,10 @@
     class="country-selector"
     [class.separate]="separateDialCode"
     [class.focused]="separateDialCode && isDialCodeFocused"
+    [class.invalid]="$isCountryInvalid()"
     [disabled]="disabled"
     [attr.aria-label]="ariaLabel"
+    [attr.aria-invalid]="$isCountryInvalid() || null"
   >
     <ngx-mat-input-tel-flag
       class="main-flag"

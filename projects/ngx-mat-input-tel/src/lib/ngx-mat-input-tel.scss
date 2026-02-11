@@ -63,6 +63,12 @@
       color: rgba(#000, 0.38);
     }
 
+    &.invalid {
+      &.separate {
+        border-color: var(--mat-form-field-error-text-color, var(--mat-sys-error));
+      }
+    }
+
     &.separate {
       position: absolute;
       left: 0;
