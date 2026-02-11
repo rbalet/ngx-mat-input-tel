@@ -5,11 +5,14 @@
     (click)="openCountrySelector()"
     class="country-selector"
     [class.separate]="separateDialCode"
+    [class.invalid-country]="$isCountryInvalid()"
     [disabled]="disabled"
     [attr.aria-label]="ariaLabel"
+    [attr.aria-invalid]="$isCountryInvalid()"
   >
     <ngx-mat-input-tel-flag
       class="main-flag"
+      [class.invalid-country]="$isCountryInvalid()"
       [country]="{
         iso2: $selectedCountry().iso2,
         dialCode: $selectedCountry().dialCode,

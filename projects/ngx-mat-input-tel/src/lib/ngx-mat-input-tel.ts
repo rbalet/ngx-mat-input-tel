@@ -127,10 +127,14 @@ export class NgxMatInputTelComponent
     this._preferredCountries = value.map((v) => v.toUpperCase())
   }
 
+  private _onlyCountries: string[] = []
   @Input() set onlyCountries(countryCodes: string[]) {
     if (countryCodes.length) {
       const codes = countryCodes.map((c) => c.toUpperCase())
+      this._onlyCountries = codes
       this.$availableCountries.set(this._getFilteredCountries(codes))
+    } else {
+      this._onlyCountries = []
     }
 
     this._setPreferredCountriesInDropDown()
@@ -190,6 +194,7 @@ export class NgxMatInputTelComponent
   $availableCountries = signal<Record<string, Country>>(this._initAllCountries())
   $preferredCountriesInDropDown = signal<Record<string, Country>>({})
   $selectedCountry = signal<Country>({} as Country)
+  $isCountryInvalid = signal<boolean>(false)
   numberInstance?: PhoneNumber
   value?: any
 
@@ -349,6 +354,23 @@ export class NgxMatInputTelComponent
       this.value = this.formattedPhoneNumber().toString()
     }
 
+    // Update form control with custom error if country is invalid
+    if (this.ngControl && this.ngControl.control) {
+      const currentErrors = this.ngControl.control.errors || {}
+      if (this.$isCountryInvalid()) {
+        this.ngControl.control.setErrors({
+          ...currentErrors,
+          invalidCountry: true,
+        })
+      } else if (currentErrors['invalidCountry']) {
+        // Remove invalidCountry error if country is now valid
+        const { invalidCountry, ...remainingErrors } = currentErrors
+        this.ngControl.control.setErrors(
+          Object.keys(remainingErrors).length > 0 ? remainingErrors : null,
+        )
+      }
+    }
+
     this.propagateChange(this.value)
     this._changeDetectorRef.markForCheck()
   }
@@ -356,6 +378,7 @@ export class NgxMatInputTelComponent
   private _setCountry() {
     if (!this.phoneNumber) {
       this.value = null
+      this.$isCountryInvalid.set(false)
       return
     }
 
@@ -366,6 +389,7 @@ export class NgxMatInputTelComponent
     if (!numberInstance) {
       // Single digit or invalid number
       this.value = this.phoneNumber.toString()
+      this.$isCountryInvalid.set(false)
       return
     }
     this.numberInstance = numberInstance
@@ -388,8 +412,18 @@ export class NgxMatInputTelComponent
         this.$selectedCountry().iso2 !== this.numberInstance.country &&
         this.numberInstance.country
       ) {
-        this.$selectedCountry.set(this.getCountry(this.numberInstance.country))
+        const newCountry = this.getCountry(this.numberInstance.country)
+        this.$selectedCountry.set(newCountry)
+        
+        // Validate if the country is allowed based on onlyCountries restriction
+        const isAllowed = this._isCountryAllowed(this.numberInstance.country)
+        this.$isCountryInvalid.set(!isAllowed)
+        
         this.countryChanged.emit(this.$selectedCountry())
+      } else {
+        // Check current country validity
+        const isAllowed = this._isCountryAllowed(this.$selectedCountry().iso2)
+        this.$isCountryInvalid.set(!isAllowed)
       }
     }
   }
@@ -406,6 +440,11 @@ export class NgxMatInputTelComponent
       ...country.value,
       iso2: country.key,
     })
+    
+    // When manually selecting from dropdown, the country should be valid
+    // since the dropdown only shows allowed countries
+    this.$isCountryInvalid.set(false)
+    
     this.countryChanged.emit(this.$selectedCountry())
 
     this.onPhoneNumberChange()
@@ -428,6 +467,20 @@ export class NgxMatInputTelComponent
       areaCodes: undefined,
       placeholder: '',
     }
+  }
+
+  /**
+   * Check if a country code is allowed based on onlyCountries restriction
+   * @param countryCode - The ISO2 country code to check
+   * @returns true if the country is allowed or no restriction is set, false otherwise
+   */
+  private _isCountryAllowed(countryCode: string): boolean {
+    // If no restriction is set, all countries are allowed
+    if (!this._onlyCountries || this._onlyCountries.length === 0) {
+      return true
+    }
+    // Check if the country is in the allowed list
+    return this._onlyCountries.includes(countryCode.toUpperCase())
   }
 
   public onInputKeyPress(event: any): void {
