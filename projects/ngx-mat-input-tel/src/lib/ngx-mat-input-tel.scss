@@ -90,8 +90,9 @@
       );
       outline: none;
 
-      &:focus {
+      &.focused {
         border-color: var(--mat-form-field-outlined-focus-outline-color, var(--mat-sys-primary));
+        border-width: var(--mat-form-field-outlined-focus-outline-width, 2px);
       }
     }
   }

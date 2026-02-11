@@ -3,8 +3,11 @@
     type="button"
     matRipple
     (click)="openCountrySelector()"
+    (focus)="onDialCodeFocus()"
+    (blur)="onDialCodeBlur()"
     class="country-selector"
     [class.separate]="separateDialCode"
+    [class.focused]="separateDialCode && isDialCodeFocused"
     [disabled]="disabled"
     [attr.aria-label]="ariaLabel"
   >
@@ -25,7 +28,8 @@
     name="tel"
     [autocomplete]="autocomplete"
     [ngClass]="cssClass"
-    (blur)="onTouched()"
+    (blur)="onTouched(); onPhoneInputBlur()"
+    (focus)="onPhoneInputFocus()"
     (keypress)="onInputKeyPress($event)"
     [(ngModel)]="phoneNumber"
     (ngModelChange)="onPhoneNumberChange()"

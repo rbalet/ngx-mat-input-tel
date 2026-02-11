@@ -184,6 +184,8 @@ export class NgxMatInputTelComponent
 
   stateChanges = new Subject<void>()
   focused = false
+  isDialCodeFocused = false
+  isPhoneInputFocused = false
   describedBy = ''
   phoneNumber?: E164Number | NationalNumber = '' as E164Number | NationalNumber
   private _allCountries: Record<string, Country> = {}
@@ -435,6 +437,22 @@ export class NgxMatInputTelComponent
     if (!pattern.test(event.key)) {
       event.preventDefault()
     }
+  }
+
+  public onDialCodeFocus(): void {
+    this.isDialCodeFocused = true
+  }
+
+  public onDialCodeBlur(): void {
+    this.isDialCodeFocused = false
+  }
+
+  public onPhoneInputFocus(): void {
+    this.isPhoneInputFocused = true
+  }
+
+  public onPhoneInputBlur(): void {
+    this.isPhoneInputFocused = false
   }
 
   protected _initAllCountries(): Record<string, Country> {
