@@ -4,10 +4,9 @@ import { MatDividerModule } from '@angular/material/divider'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
+import { MatDialogModule } from '@angular/material/dialog'
 import { MatInputModule } from '@angular/material/input'
-import { MatMenuModule } from '@angular/material/menu'
 import { NgxMatInputTelComponent } from './ngx-mat-input-tel'
-import { SearchPipe } from './search.pipe'
 
 describe('NgxMatInputTelComponent', () => {
   let component: NgxMatInputTelComponent
@@ -19,19 +18,18 @@ describe('NgxMatInputTelComponent', () => {
         CommonModule,
         FormsModule,
         MatInputModule,
-        MatMenuModule,
+        MatDialogModule,
         MatButtonModule,
         MatDividerModule,
         ReactiveFormsModule,
         NgxMatInputTelComponent,
-        SearchPipe,
       ],
     }).compileComponents()
   }))
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NgxMatInputTelComponent)
-    component = fixtureInstance
+    component = fixture.componentInstance
     fixture.detectChanges()
   })
 
