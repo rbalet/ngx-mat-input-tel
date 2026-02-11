@@ -189,6 +189,7 @@ export class NgxMatInputTelComponent
   describedBy = ''
   phoneNumber?: E164Number | NationalNumber = '' as E164Number | NationalNumber
   private _allCountries: Record<string, Country> = {}
+  private _allCountriesCount = 0
   $availableCountries = signal<Record<string, Country>>(this._initAllCountries())
   $preferredCountriesInDropDown = signal<Record<string, Country>>({})
   $selectedCountry = signal<Country>({} as Country)
@@ -347,7 +348,7 @@ export class NgxMatInputTelComponent
   private _isCountryAllowed(countryCode: string): boolean {
     const availableCountries = this.$availableCountries()
     // If no restrictions (all countries available), any country is allowed
-    if (Object.keys(availableCountries).length === Object.keys(this._allCountries).length) {
+    if (Object.keys(availableCountries).length === this._allCountriesCount) {
       return true
     }
     // Check if the country is in the available countries list
@@ -369,10 +370,13 @@ export class NgxMatInputTelComponent
       })
     } else {
       // Remove the invalidCountry error if it exists
-      const { invalidCountry, ...remainingErrors } = currentErrors
-      this.ngControl.control.setErrors(
-        Object.keys(remainingErrors).length > 0 ? remainingErrors : null
-      )
+      if ('invalidCountry' in currentErrors) {
+        const newErrors = { ...currentErrors }
+        delete newErrors['invalidCountry']
+        this.ngControl.control.setErrors(
+          Object.keys(newErrors).length > 0 ? newErrors : null
+        )
+      }
     }
   }
 
@@ -548,6 +552,7 @@ export class NgxMatInputTelComponent
       }
       this._allCountries[iso2] = country
     })
+    this._allCountriesCount = Object.keys(this._allCountries).length
     return this._allCountries
   }
 
