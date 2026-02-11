@@ -364,7 +364,7 @@ export class NgxMatInputTelComponent
         })
       } else if (currentErrors.invalidCountry) {
         // Remove invalidCountry error if country is now valid
-        const { invalidCountry, ...remainingErrors } = currentErrors
+        const { invalidCountry: _, ...remainingErrors } = currentErrors
         this.ngControl.control.setErrors(
           Object.keys(remainingErrors).length > 0 ? remainingErrors : null,
         )
