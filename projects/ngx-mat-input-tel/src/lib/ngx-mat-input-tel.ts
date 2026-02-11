@@ -184,6 +184,8 @@ export class NgxMatInputTelComponent
 
   stateChanges = new Subject<void>()
   focused = false
+  isDialCodeFocused = false
+  isPhoneInputFocused = false
   describedBy = ''
   phoneNumber?: E164Number | NationalNumber = '' as E164Number | NationalNumber
   private _allCountries: Record<string, Country> = {}
@@ -435,6 +437,53 @@ export class NgxMatInputTelComponent
     if (!pattern.test(event.key)) {
       event.preventDefault()
     }
+  }
+
+  public onDialCodeFocus(): void {
+    this.isDialCodeFocused = true
+    // In separated mode, button focus shouldn't make mat-form-field appear focused
+    // Only clear focused state if phone input is not focused
+    if (this.separateDialCode && !this.isPhoneInputFocused) {
+      this.focused = false
+      this.stateChanges.next()
+    }
+  }
+
+  public onDialCodeBlur(): void {
+    this.isDialCodeFocused = false
+    // In separated mode, keep mat-form-field focused if phone input is focused
+    if (this.separateDialCode) {
+      if (!this.isPhoneInputFocused) {
+        this.focused = false
+      }
+      this.stateChanges.next()
+    }
+  }
+
+  public onPhoneInputFocus(): void {
+    this.isPhoneInputFocused = true
+    // In separated mode, ensure mat-form-field shows as focused
+    if (this.separateDialCode) {
+      this.focused = true
+      this.stateChanges.next()
+    }
+  }
+
+  public onPhoneInputBlur(): void {
+    this.isPhoneInputFocused = false
+    // In separated mode, clear mat-form-field focus state
+    // Only clear if dial code button is not focused
+    if (this.separateDialCode) {
+      if (!this.isDialCodeFocused) {
+        this.focused = false
+      }
+      this.stateChanges.next()
+    }
+  }
+
+  public onPhoneInputBlurAndTouch(): void {
+    this.onTouched()
+    this.onPhoneInputBlur()
   }
 
   protected _initAllCountries(): Record<string, Country> {
