@@ -64,8 +64,16 @@
     }
 
     &.invalid {
+      // Show error border for separated dial code mode
       &.separate {
         border-color: var(--mat-form-field-error-text-color, var(--mat-sys-error));
+      }
+      
+      // Show error indication for non-separated mode with red outline
+      &:not(.separate) {
+        outline: 2px solid var(--mat-form-field-error-text-color, var(--mat-sys-error));
+        outline-offset: -2px;
+        border-radius: 4px;
       }
     }
 

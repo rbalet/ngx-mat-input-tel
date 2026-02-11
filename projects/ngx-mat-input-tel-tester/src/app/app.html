@@ -27,6 +27,8 @@
         </mat-error>
       } @else if (f1.submitted && phoneForm.controls.phone.errors?.validatePhoneNumber) {
         <mat-error> Invalid Number </mat-error>
+      } @else if (phoneForm.controls.phone.errors?.invalidCountry) {
+        <mat-error> Country not allowed in onlyCountries </mat-error>
       }
     </mat-form-field>
 
@@ -85,6 +87,9 @@
       }
       @if (profileForm.controls.phone.errors?.validatePhoneNumber) {
         <mat-error> Invalid Number </mat-error>
+      }
+      @if (profileForm.controls.phone.errors?.invalidCountry) {
+        <mat-error> Country not allowed in onlyCountries </mat-error>
       }
     </mat-form-field>
   </form>
