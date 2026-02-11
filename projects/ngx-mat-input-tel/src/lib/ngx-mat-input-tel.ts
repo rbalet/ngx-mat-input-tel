@@ -450,6 +450,9 @@ export class NgxMatInputTelComponent
 
   public onDialCodeBlur(): void {
     this.isDialCodeFocused = false
+    if (this.separateDialCode) {
+      this.stateChanges.next()
+    }
   }
 
   public onPhoneInputFocus(): void {
@@ -463,6 +466,11 @@ export class NgxMatInputTelComponent
 
   public onPhoneInputBlur(): void {
     this.isPhoneInputFocused = false
+    // In separated mode, clear mat-form-field focus state
+    if (this.separateDialCode) {
+      this.focused = false
+      this.stateChanges.next()
+    }
   }
 
   protected _initAllCountries(): Record<string, Country> {
