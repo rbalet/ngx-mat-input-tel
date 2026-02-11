@@ -442,7 +442,8 @@ export class NgxMatInputTelComponent
   public onDialCodeFocus(): void {
     this.isDialCodeFocused = true
     // In separated mode, button focus shouldn't make mat-form-field appear focused
-    if (this.separateDialCode) {
+    // unless phone input is also focused (edge case)
+    if (this.separateDialCode && !this.isPhoneInputFocused) {
       this.focused = false
       this.stateChanges.next()
     }
@@ -467,7 +468,8 @@ export class NgxMatInputTelComponent
   public onPhoneInputBlur(): void {
     this.isPhoneInputFocused = false
     // In separated mode, clear mat-form-field focus state
-    if (this.separateDialCode) {
+    // unless dial code button is still focused (edge case)
+    if (this.separateDialCode && !this.isDialCodeFocused) {
       this.focused = false
       this.stateChanges.next()
     }
