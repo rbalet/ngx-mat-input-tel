@@ -2,11 +2,10 @@
   <button
     type="button"
     matRipple
-    [matMenuTriggerFor]="menu"
+    (click)="openCountrySelector()"
     class="country-selector"
     [class.separate]="separateDialCode"
     [disabled]="disabled"
-    (menuOpened)="onMenuOpened()"
     [attr.aria-label]="ariaLabel"
   >
     <ngx-mat-input-tel-flag
@@ -17,67 +16,6 @@
       }"
     ></ngx-mat-input-tel-flag>
   </button>
-
-  <mat-menu #menu="matMenu">
-    <ng-template matMenuContent>
-      @if (enableSearch) {
-        <input
-          #menuSearchInput
-          class="country-search"
-          [(ngModel)]="$searchCriteria"
-          [placeholder]="searchPlaceholder"
-          (click)="$event.stopPropagation()"
-          (keydown)="$event.stopPropagation()"
-          style="
-            width: calc(100% - 4px);
-            height: 34px;
-            border-top: none;
-            border-right: none;
-            border-left: none;
-            border-image: initial;
-            border-bottom: 1px solid rgb(221, 221, 221);
-            font-size: 14px;
-            padding: 20px 10px 24px;
-            box-sizing: border-box;
-            background: transparent;
-            margin: 2px;
-          "
-        />
-      }
-      @for (
-        country of $selectablePreferredCountriesInDropDown() | keyvalue: null;
-        track country.key
-      ) {
-        <button
-          type="button"
-          mat-menu-item
-          class="country-list-button"
-          (click)="onCountrySelect(country)"
-        >
-          <ngx-mat-input-tel-flag
-            class="menu-flag"
-            [country]="country.value"
-          ></ngx-mat-input-tel-flag>
-        </button>
-      }
-      @if ($showDivider()) {
-        <mat-divider></mat-divider>
-      }
-      @for (country of $selectableCountries() | keyvalue: null; track country.key) {
-        <button
-          type="button"
-          mat-menu-item
-          class="country-list-button"
-          (click)="onCountrySelect(country)"
-        >
-          <ngx-mat-input-tel-flag
-            class="menu-flag"
-            [country]="country.value"
-          ></ngx-mat-input-tel-flag>
-        </button>
-      }
-    </ng-template>
-  </mat-menu>
 
   <input
     class="ngx-mat-input-tel-input"

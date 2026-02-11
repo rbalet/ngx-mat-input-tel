@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y'
 import { coerceBooleanProperty } from '@angular/cdk/coercion'
-import { KeyValuePipe, NgClass } from '@angular/common'
+import { NgClass } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,8 +17,6 @@ import {
   Self,
   ViewChild,
   booleanAttribute,
-  computed,
-  model,
   signal,
 } from '@angular/core'
 import {
@@ -31,10 +29,10 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms'
 import { ErrorStateMatcher, MatRippleModule } from '@angular/material/core'
+import { MatDialog, MatDialogModule } from '@angular/material/dialog'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatFormFieldControl } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
-import { MatMenu, MatMenuModule } from '@angular/material/menu'
 import {
   AsYouType,
   CountryCode as CC,
@@ -46,6 +44,10 @@ import {
   parsePhoneNumberFromString,
 } from 'libphonenumber-js'
 import { Subject } from 'rxjs'
+import {
+  CountrySelectDialogComponent,
+  CountrySelectDialogData,
+} from './country-select-dialog/country-select-dialog.component'
 import { COUNTRIES_CODE, COUNTRIES_NAME, EXAMPLES } from './data/country-code.const'
 import { Country } from './model/country.model'
 import { PhoneNumberFormat } from './model/phone-number-format.model'
@@ -84,12 +86,11 @@ class ngxMatInputTelBase {
     MatInputModule,
 
     // Mat
-    MatMenuModule,
+    MatDialogModule,
     MatRippleModule,
     MatDividerModule,
 
     // Pipes
-    KeyValuePipe,
     RemoveIsoPipe,
 
     // Components
@@ -101,8 +102,6 @@ export class NgxMatInputTelComponent
   implements OnInit, DoCheck, OnDestroy
 {
   static nextId = 0
-  @ViewChild(MatMenu) matMenu!: MatMenu
-  @ViewChild('menuSearchInput', { static: false }) menuSearchInput?: ElementRef<HTMLInputElement>
   @ViewChild('focusable', { static: false }) focusable!: ElementRef
 
   @HostBinding()
@@ -189,43 +188,10 @@ export class NgxMatInputTelComponent
   phoneNumber?: E164Number | NationalNumber = '' as E164Number | NationalNumber
   private _allCountries: Record<string, Country> = {}
   $availableCountries = signal<Record<string, Country>>(this._initAllCountries())
-  $selectableCountries = computed(() => {
-    let countries: Record<string, Country> = {}
-    // Note: filter selectableCountries from the $selectablePreferredCountriesInDropDown()
-    if (!this.$searchCriteria() || this.$searchCriteria() === '')
-      countries = this.$availableCountries()
-    else
-      countries = this._getOnSearchCountries(
-        this.$searchCriteria().toLowerCase(),
-        this.$availableCountries(),
-      )
-
-    for (const iso2 of Object.keys(this.$preferredCountriesInDropDown())) {
-      delete countries[iso2]
-    }
-
-    return countries
-  })
   $preferredCountriesInDropDown = signal<Record<string, Country>>({})
-  $selectablePreferredCountriesInDropDown = computed(() => {
-    if (!this.$searchCriteria() || this.$searchCriteria() === '')
-      return this.$preferredCountriesInDropDown()
-
-    return this._getOnSearchCountries(
-      this.$searchCriteria().toLowerCase(),
-      this.$preferredCountriesInDropDown(),
-    )
-  })
-  $showDivider = computed(() => {
-    return (
-      Object.entries(this.$preferredCountriesInDropDown()).length > 0 &&
-      Object.entries(this.$selectableCountries()).length > 0
-    )
-  })
   $selectedCountry = signal<Country>({} as Country)
   numberInstance?: PhoneNumber
   value?: any
-  $searchCriteria = model<string>('')
 
   private _previousFormattedNumber?: string
 
@@ -238,6 +204,7 @@ export class NgxMatInputTelComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
+    private _dialog: MatDialog,
     @Optional() @Self() _ngControl: NgControl,
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective,
@@ -287,10 +254,39 @@ export class NgxMatInputTelComponent
     }
   }
 
-  onMenuOpened() {
-    setTimeout(() => {
-      this.menuSearchInput?.nativeElement?.focus()
-    }, 0)
+  openCountrySelector(): void {
+    if (this.disabled) {
+      return
+    }
+
+    const dialogRef = this._dialog.open<CountrySelectDialogComponent, CountrySelectDialogData, Country>(
+      CountrySelectDialogComponent,
+      {
+        width: '420px',
+        maxWidth: '90vw',
+        maxHeight: '80vh',
+        data: {
+          selectedCountry: this.$selectedCountry(),
+          availableCountries: this.$availableCountries(),
+          preferredCountriesInDropDown: this.$preferredCountriesInDropDown(),
+          enableSearch: this.enableSearch,
+          searchPlaceholder: this.searchPlaceholder,
+          ariaLabel: this.ariaLabel,
+        },
+        autoFocus: this.enableSearch ? 'dialog' : 'first-tabbable',
+        restoreFocus: true,
+      },
+    )
+
+    dialogRef.afterClosed().subscribe((selectedCountry) => {
+      if (selectedCountry) {
+        // Convert to the format expected by onCountrySelect
+        this.onCountrySelect({
+          key: selectedCountry.iso2,
+          value: selectedCountry,
+        })
+      }
+    })
   }
 
   updateErrorState() {
@@ -343,23 +339,6 @@ export class NgxMatInputTelComponent
         acc[country.iso2] = country
         return acc
       }, {})
-  }
-
-  private _getOnSearchCountries(
-    searchTerm: string,
-    countries: Record<string, Country>,
-  ): Record<string, Country> {
-    const result: Record<string, Country> = {}
-    for (const country of Object.values(countries)) {
-      if (
-        country.name.toLowerCase().includes(searchTerm) ||
-        country.dialCode.includes(searchTerm) ||
-        (country.areaCodes && country.areaCodes.join(',').includes(searchTerm))
-      ) {
-        result[country.iso2] = country
-      }
-    }
-    return result
   }
 
   public onPhoneNumberChange(): void {

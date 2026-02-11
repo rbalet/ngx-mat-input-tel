@@ -1,0 +1,84 @@
+<div class="country-select-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>{{ data.ariaLabel }}</h2>
+    <button
+      mat-icon-button
+      type="button"
+      class="close-button"
+      (click)="onClose()"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    @if (data.enableSearch) {
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ data.searchPlaceholder }}</mat-label>
+        <input
+          #searchInput
+          matInput
+          type="text"
+          [(ngModel)]="$searchCriteria"
+          [placeholder]="data.searchPlaceholder"
+          autocomplete="off"
+        />
+        @if ($searchCriteria()) {
+          <button
+            matSuffix
+            mat-icon-button
+            type="button"
+            aria-label="Clear search"
+            (click)="$searchCriteria.set('')"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+    }
+
+    <div class="country-list-container">
+      <mat-list>
+        @for (
+          country of $selectablePreferredCountriesInDropDown() | keyvalue: null;
+          track country.key
+        ) {
+          <mat-list-item
+            class="country-list-item"
+            (click)="onCountrySelect(country)"
+            role="button"
+            tabindex="0"
+            (keydown.enter)="onCountrySelect(country)"
+            (keydown.space)="onCountrySelect(country); $event.preventDefault()"
+          >
+            <ngx-mat-input-tel-flag
+              class="country-flag"
+              [country]="country.value"
+            ></ngx-mat-input-tel-flag>
+          </mat-list-item>
+        }
+        
+        @if ($showDivider()) {
+          <mat-divider></mat-divider>
+        }
+        
+        @for (country of $selectableCountries() | keyvalue: null; track country.key) {
+          <mat-list-item
+            class="country-list-item"
+            (click)="onCountrySelect(country)"
+            role="button"
+            tabindex="0"
+            (keydown.enter)="onCountrySelect(country)"
+            (keydown.space)="onCountrySelect(country); $event.preventDefault()"
+          >
+            <ngx-mat-input-tel-flag
+              class="country-flag"
+              [country]="country.value"
+            ></ngx-mat-input-tel-flag>
+          </mat-list-item>
+        }
+      </mat-list>
+    </div>
+  </mat-dialog-content>
+</div>
