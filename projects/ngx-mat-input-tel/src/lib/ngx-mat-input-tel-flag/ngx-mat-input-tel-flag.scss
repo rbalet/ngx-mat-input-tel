@@ -293,5 +293,31 @@
 
   .country-selector-name {
     flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .country-selector-code {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .area-codes-badge {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    margin-left: 4px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    background-color: rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.87);
+    white-space: nowrap;
+    cursor: help;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.12);
+    }
   }
 }
