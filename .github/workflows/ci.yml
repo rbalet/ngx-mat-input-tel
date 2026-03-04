@@ -40,6 +40,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: rbalet/ngx-mat-input-tel
+          files: coverage/ngx-mat-input-tel/lcov.info
 
   publish:
     needs: test
