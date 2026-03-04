@@ -31,11 +31,11 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "projects/ngx-mat-input-tel/src/test.ts",
+            "buildTarget": "ngx-mat-input-tel:build",
             "tsConfig": "projects/ngx-mat-input-tel/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-mat-input-tel/karma.conf.js"
+            "runner": "vitest"
           }
         },
         "lint": {

@@ -1,5 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
+/// <reference types="vitest/globals" />
+import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { MatDividerModule } from '@angular/material/divider'
+import { vi } from 'vitest'
 
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -13,8 +15,8 @@ describe('NgxMatInputTelComponent', () => {
   let component: NgxMatInputTelComponent
   let fixture: ComponentFixture<NgxMatInputTelComponent>
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         CommonModule,
         FormsModule,
@@ -26,7 +28,7 @@ describe('NgxMatInputTelComponent', () => {
         NgxMatInputTelComponent,
       ],
     }).compileComponents()
-  }))
+  })
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NgxMatInputTelComponent)
@@ -189,7 +191,7 @@ describe('NgxMatInputTelComponent', () => {
     })
 
     it('should register onChange callback', () => {
-      const mockCallback = jasmine.createSpy('onChange')
+      const mockCallback = vi.fn()
       component.registerOnChange(mockCallback)
 
       component.phoneNumber = '+33123456789' as E164Number | NationalNumber
@@ -199,7 +201,7 @@ describe('NgxMatInputTelComponent', () => {
     })
 
     it('should call onChange when user types in input', () => {
-      const mockCallback = jasmine.createSpy('onChange')
+      const mockCallback = vi.fn()
       component.registerOnChange(mockCallback)
 
       const input = fixture.nativeElement.querySelector('input')
@@ -211,7 +213,7 @@ describe('NgxMatInputTelComponent', () => {
     })
 
     it('should register onTouched callback', () => {
-      const mockCallback = jasmine.createSpy('onTouched')
+      const mockCallback = vi.fn()
       component.registerOnTouched(mockCallback)
 
       expect(component.onTouched).toBe(mockCallback)
@@ -220,7 +222,7 @@ describe('NgxMatInputTelComponent', () => {
 
   describe('Country Selection', () => {
     it('should emit countryChanged when country is selected', () => {
-      spyOn(component.countryChanged, 'emit')
+      vi.spyOn(component.countryChanged, 'emit')
 
       const country = component.getCountry('US')
       component.onCountrySelect({
@@ -268,7 +270,7 @@ describe('NgxMatInputTelComponent', () => {
       expect(component.disabled).toBe(true)
       
       // Verify that openCountrySelector respects disabled state
-      spyOn(component['_dialog'], 'open')
+      vi.spyOn(component['_dialog'], 'open')
       component.openCountrySelector()
       expect(component['_dialog'].open).not.toHaveBeenCalled()
     })
