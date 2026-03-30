@@ -310,14 +310,10 @@
     border-radius: 12px;
     font-size: 0.75rem;
     line-height: 1.2;
-    background-color: rgba(0, 0, 0, 0.08);
-    color: rgba(0, 0, 0, 0.87);
+    background-color: var(--mat-form-field-filled-container-color, var(--mat-sys-surface-variant));
+    color: var(--mat-list-list-item-label-text-color, var(--mat-sys-on-surface));
     white-space: nowrap;
     cursor: help;
     transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.12);
-    }
   }
 }
