@@ -340,7 +340,7 @@ export class NgxMatInputTelComponent
   private _getFilteredCountries(countryCodes: string[]): Record<string, Country> {
     return Object.values(this._allCountries)
       .filter((c) => countryCodes.includes(c.iso2))
-      .sort((a, b) => countryCodes.indexOf(a.name) - countryCodes.indexOf(b.name))
+      .sort((a, b) => countryCodes.indexOf(a.iso2) - countryCodes.indexOf(b.iso2))
       .reduce<Record<string, Country>>((acc, country) => {
         acc[country.iso2] = country
         return acc
