@@ -232,6 +232,17 @@ export class NgxMatInputTelComponent
   }
 
   ngOnInit() {
+    // Re-initialize countries now that all @Input() values (e.g. enablePlaceholder) are available.
+    // The field initializer runs during the constructor — before Angular applies @Input bindings —
+    // so we must rebuild the country list here to pick up the correct enablePlaceholder value.
+    this.$availableCountries.set(this._initAllCountries())
+
+    // If onlyCountries was set via its @Input setter (which runs before ngOnInit),
+    // re-apply the filter so those countries also have placeholders.
+    if (this._onlyCountries.length) {
+      this.$availableCountries.set(this._getFilteredCountries(this._onlyCountries))
+    }
+
     this._setPreferredCountriesInDropDown()
     this._setDefaultCountry()
 
