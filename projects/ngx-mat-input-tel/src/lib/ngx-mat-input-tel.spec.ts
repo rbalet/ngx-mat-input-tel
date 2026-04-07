@@ -122,6 +122,32 @@ describe('NgxMatInputTelComponent', () => {
     })
   })
 
+  describe('enablePlaceholder', () => {
+    it('should populate selectedCountry placeholder when enablePlaceholder is set before ngOnInit', () => {
+      // Create a new fixture so we can set the input before the component initialises
+      const localFixture = TestBed.createComponent(NgxMatInputTelComponent)
+      const localComponent = localFixture.componentInstance
+
+      localComponent.enablePlaceholder = true
+      localComponent.defaultCountry = 'US'
+
+      // detectChanges triggers ngOnInit
+      localFixture.detectChanges()
+
+      expect(localComponent.$selectedCountry().placeholder).toBeTruthy()
+    })
+
+    it('should leave selectedCountry placeholder empty when enablePlaceholder is not set', () => {
+      const localFixture = TestBed.createComponent(NgxMatInputTelComponent)
+      const localComponent = localFixture.componentInstance
+
+      localComponent.defaultCountry = 'US'
+      localFixture.detectChanges()
+
+      expect(localComponent.$selectedCountry().placeholder).toBeFalsy()
+    })
+  })
+
   describe('Input and Label Bindings', () => {
     it('should render input element', () => {
       const input = fixture.nativeElement.querySelector('input')

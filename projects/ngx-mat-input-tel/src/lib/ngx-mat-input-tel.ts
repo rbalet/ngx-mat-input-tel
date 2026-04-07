@@ -25,7 +25,7 @@ import {
   FormsModule,
   NgControl,
   NgForm,
-  ReactiveFormsModule
+  ReactiveFormsModule,
 } from '@angular/forms'
 import { ErrorStateMatcher, MatRippleModule } from '@angular/material/core'
 import { MatDialog, MatDialogModule } from '@angular/material/dialog'
@@ -65,11 +65,9 @@ class ngxMatInputTelBase {
 
 @Component({
   selector: 'ngx-mat-input-tel',
-templateUrl: './ngx-mat-input-tel.html',
+  templateUrl: './ngx-mat-input-tel.html',
   styleUrls: ['./ngx-mat-input-tel.scss'],
-  providers: [
-    { provide: MatFormFieldControl, useExisting: NgxMatInputTelComponent },
-  ],
+  providers: [{ provide: MatFormFieldControl, useExisting: NgxMatInputTelComponent }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgClass,
@@ -136,8 +134,8 @@ export class NgxMatInputTelComponent
 
     // Update validator when onlyCountries changes
     if (this.ngControl && this.ngControl.control) {
-      this.ngControl.control.setValidators(ngxMatInputTelValidatorFactory(this._onlyCountries));
-      this.ngControl.control.updateValueAndValidity();
+      this.ngControl.control.setValidators(ngxMatInputTelValidatorFactory(this._onlyCountries))
+      this.ngControl.control.updateValueAndValidity()
     }
   }
 
@@ -232,6 +230,12 @@ export class NgxMatInputTelComponent
   }
 
   ngOnInit() {
+    if (this._onlyCountries.length) {
+      this.$availableCountries.set(this._getFilteredCountries(this._onlyCountries))
+    } else {
+      this.$availableCountries.set(this._initAllCountries())
+    }
+
     this._setPreferredCountriesInDropDown()
     this._setDefaultCountry()
 
@@ -340,7 +344,7 @@ export class NgxMatInputTelComponent
   private _getFilteredCountries(countryCodes: string[]): Record<string, Country> {
     return Object.values(this._allCountries)
       .filter((c) => countryCodes.includes(c.iso2))
-      .sort((a, b) => countryCodes.indexOf(a.name) - countryCodes.indexOf(b.name))
+      .sort((a, b) => countryCodes.indexOf(a.iso2) - countryCodes.indexOf(b.iso2))
       .reduce<Record<string, Country>>((acc, country) => {
         acc[country.iso2] = country
         return acc

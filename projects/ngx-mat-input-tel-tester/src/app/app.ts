@@ -55,7 +55,7 @@ export class AppComponent implements AfterViewInit {
     phone: new FormControl(null),
   })
 
-  $onlyCountries = signal(['US', 'DE', 'FR'])
+  $onlyCountries = signal(['US', 'DE'])
 
   frCountriesName: Record<string, string> = {
     US: 'États-Unis',
@@ -65,8 +65,8 @@ export class AppComponent implements AfterViewInit {
 
   constructor() {
     setTimeout(() => {
-      // Fake onlyCountries change
-      this.$onlyCountries.set(['US', 'DE'])
+      // Fake onlyCountries change - add FR
+      this.$onlyCountries.set(['US', 'DE', 'FR'])
     }, 1000)
   }
 
