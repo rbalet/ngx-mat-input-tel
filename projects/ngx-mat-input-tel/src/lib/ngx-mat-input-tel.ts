@@ -25,7 +25,7 @@ import {
   FormsModule,
   NgControl,
   NgForm,
-  ReactiveFormsModule
+  ReactiveFormsModule,
 } from '@angular/forms'
 import { ErrorStateMatcher, MatRippleModule } from '@angular/material/core'
 import { MatDialog, MatDialogModule } from '@angular/material/dialog'
@@ -65,11 +65,9 @@ class ngxMatInputTelBase {
 
 @Component({
   selector: 'ngx-mat-input-tel',
-templateUrl: './ngx-mat-input-tel.html',
+  templateUrl: './ngx-mat-input-tel.html',
   styleUrls: ['./ngx-mat-input-tel.scss'],
-  providers: [
-    { provide: MatFormFieldControl, useExisting: NgxMatInputTelComponent },
-  ],
+  providers: [{ provide: MatFormFieldControl, useExisting: NgxMatInputTelComponent }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgClass,
@@ -136,8 +134,8 @@ export class NgxMatInputTelComponent
 
     // Update validator when onlyCountries changes
     if (this.ngControl && this.ngControl.control) {
-      this.ngControl.control.setValidators(ngxMatInputTelValidatorFactory(this._onlyCountries));
-      this.ngControl.control.updateValueAndValidity();
+      this.ngControl.control.setValidators(ngxMatInputTelValidatorFactory(this._onlyCountries))
+      this.ngControl.control.updateValueAndValidity()
     }
   }
 
@@ -232,15 +230,10 @@ export class NgxMatInputTelComponent
   }
 
   ngOnInit() {
-    // Re-initialize countries now that all @Input() values (e.g. enablePlaceholder) are available.
-    // The field initializer runs during the constructor — before Angular applies @Input bindings —
-    // so we must rebuild the country list here to pick up the correct enablePlaceholder value.
-    this.$availableCountries.set(this._initAllCountries())
-
-    // If onlyCountries was set via its @Input setter (which runs before ngOnInit),
-    // re-apply the filter so those countries also have placeholders.
     if (this._onlyCountries.length) {
       this.$availableCountries.set(this._getFilteredCountries(this._onlyCountries))
+    } else {
+      this.$availableCountries.set(this._initAllCountries())
     }
 
     this._setPreferredCountriesInDropDown()
