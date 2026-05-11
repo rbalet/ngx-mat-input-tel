@@ -1,0 +1,43 @@
+name: Publish
+
+on:
+  workflow_call:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
+
+    steps:
+      - name: ⬇️ Get latest code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: ⬇️ Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - name: ⬇️ Get Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🏗️ Build
+        run: pnpm run build && pnpm run copy-files
+
+      - name: 🚀 release
+        run: pnpm exec semantic-release --branches main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true

@@ -4,80 +4,24 @@ on:
   push:
     branches:
       - main
-  pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/test.yml
     permissions:
       contents: read
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: ⬇️ Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: ⬇️ Get Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: "pnpm"
-
-      - name: 📦 Install dependencies
-        run: pnpm install
-
-      - name: 🧪 Run tests
-        run: pnpm run test:ci
-
-      - name: 📊 Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: rbalet/ngx-mat-input-tel
-          files: coverage/ngx-mat-input-tel/lcov.info
+    secrets: inherit
 
   publish:
     needs: test
-    runs-on: ubuntu-latest
-    if: github.ref_name == 'main'
+    uses: ./.github/workflows/publish.yml
     permissions:
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for npm provenance
-
-    steps:
-      - name: ⬇️ Get latest code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: ⬇️ Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: ⬇️ Get Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: "pnpm"
-
-      - name: 📦 Install dependencies
-        run: pnpm install
-
-      - name: 🏗️ Build
-        run: pnpm run build && pnpm run copy-files
-
-      - name: 🚀 release
-        run: pnpm exec semantic-release --branches main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
+    secrets: inherit

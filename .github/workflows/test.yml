@@ -1,0 +1,41 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: ⬇️ Get latest code
+        uses: actions/checkout@v6
+
+      - name: ⬇️ Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - name: ⬇️ Get Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🧪 Run tests
+        run: pnpm run test:ci
+
+      - name: 📊 Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          files: ./coverage/ngx-back-button/lcov.info
+          flags: unittests
+          name: ngx-back-button-coverage
+          fail_ci_if_error: false
