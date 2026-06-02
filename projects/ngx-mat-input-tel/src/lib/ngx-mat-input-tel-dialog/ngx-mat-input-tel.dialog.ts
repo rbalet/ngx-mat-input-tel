@@ -109,10 +109,6 @@ export class NgxMatInputTelDialog implements OnInit {
     });
   }
 
-  onClose(): void {
-    this.dialogRef.close();
-  }
-
   private _getOnSearchCountries(
     searchTerm: string,
     countries: Record<string, Country>,
