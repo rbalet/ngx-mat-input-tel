@@ -1,4 +1,4 @@
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 
 @include mat.elevation-classes();
 @include mat.app-background();
@@ -10,7 +10,7 @@ $theme: mat.define-theme(
       primary: mat.$violet-palette,
     ),
     typography: (
-      brand-family: 'Roboto',
+      brand-family: "Roboto",
       bold-weight: 900,
     ),
     density: (

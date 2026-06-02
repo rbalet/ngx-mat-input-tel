@@ -1,13 +1,13 @@
-import { Pipe, PipeTransform } from '@angular/core'
-import { Country } from './model/country.model'
+import { Pipe, PipeTransform } from "@angular/core";
+import { Country } from "./model/country.model";
 
 @Pipe({
-  name: 'removeIso',
+  name: "removeIso",
 })
 export class RemoveIsoPipe implements PipeTransform {
   transform(country: Country): string {
-    if (!country?.placeholder || !country?.dialCode) return country?.placeholder || ''
+    if (!country?.placeholder || !country?.dialCode) return country?.placeholder || "";
 
-    return country.placeholder.replace(`+${country.dialCode}`, '')
+    return country.placeholder.replace(`+${country.dialCode}`, "");
   }
 }

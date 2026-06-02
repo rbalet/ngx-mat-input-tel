@@ -4,7 +4,7 @@
 
 - This is an Angular Material library for international telephone input, with country flag dropdown, validation, and formatting using `libphonenumber-js`.
 - Main library code is in `projects/ngx-mat-input-tel/src/lib/`.
-- Demo/test app is in `projects/ngx-mat-input-tel-tester/`.
+- Demo/test app is in `projects/demo/`.
 - Country data and phone formats are in `src/lib/data/country-code.const.ts`.
 
 ## Key Components & Data Flow
@@ -55,4 +55,4 @@
 - `src/lib/data/country-code.const.ts` (country data)
 - `src/lib/ngx-mat-input-tel.validator.ts` (validation)
 - `src/lib/ngx-mat-input-tel-flag/ngx-mat-input-tel-flag.ts` (flag rendering)
-- `projects/ngx-mat-input-tel-tester/src/app/app.html` (usage examples)
+- `projects/demo/src/app/app.html` (usage examples)

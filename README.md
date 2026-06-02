@@ -45,7 +45,7 @@ This is a fork from the [ngx-mat-intl-tel-input](https://github.com/tanansatpal/
 Add `NgxMatInputTelComponent` to your component file:
 
 ```ts
-imports: [NgxMatInputTelComponent]
+imports: [NgxMatInputTelComponent];
 ```
 
 ## Example
@@ -66,18 +66,17 @@ Refer to main app in this repository for working example.
 ```
 
 ```html
-
 <form #f="ngForm" [formGroup]="phoneForm">
   <ngx-mat-input-tel
-  [preferredCountries]="['US', 'GB']"
-  [enablePlaceholder]="true"
-  [enableSearch]="true"
-  name="phone"
-  autocomplete="tel"
-  (countryChanged)="yourComponentMethodToTreatyCountryChangedEvent($event)" // $event is a instance of current select Country
-  formControlName="phone"></ngx-mat-input-tel>
+    [preferredCountries]="['US', 'GB']"
+    [enablePlaceholder]="true"
+    [enableSearch]="true"
+    name="phone"
+    autocomplete="tel"
+    (countryChanged)="yourComponentMethodToTreatyCountryChangedEvent($event)"
+    formControlName="phone"
+  ></ngx-mat-input-tel>
 </form>
-
 ```
 
 If you want to show the sample number for the country selected or errors, use mat-hint and mat-error as

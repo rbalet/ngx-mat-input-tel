@@ -41,7 +41,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
-/projects/ngx-mat-input-tel-tester/tslint-to-eslint-config.log
+/projects/demo/tslint-to-eslint-config.log
 /projects/ngx-mat-input-tel/tslint-to-eslint-config.log
 .eslintcache
 
