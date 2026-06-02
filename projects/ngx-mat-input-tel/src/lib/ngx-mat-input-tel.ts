@@ -66,7 +66,7 @@ class ngxMatInputTelBase {
 @Component({
   selector: "ngx-mat-input-tel",
   templateUrl: "./ngx-mat-input-tel.html",
-  styleUrls: ["./ngx-mat-input-tel.scss"],
+  styleUrl: "./ngx-mat-input-tel.scss",
   providers: [{ provide: MatFormFieldControl, useExisting: NgxMatInputTelComponent }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -109,7 +109,7 @@ export class NgxMatInputTelComponent
   @Input() defaultCountry?: CountryCode;
   @Input() errorStateMatcher: ErrorStateMatcher = this._defaultErrorStateMatcher;
   @Input() maxLength: string | number = 15;
-  @Input() name?: string;
+  @Input() name = "tel";
   @Input() placeholder = "";
 
   @Input() countriesName = COUNTRIES_NAME;
@@ -195,7 +195,7 @@ export class NgxMatInputTelComponent
   $preferredCountriesInDropDown = signal<Record<string, Country>>({});
   $selectedCountry = signal<Country>({} as Country);
   numberInstance?: PhoneNumber;
-  value?: any;
+  value?: string | null = null;
 
   private _previousFormattedNumber?: string;
 
@@ -319,6 +319,18 @@ export class NgxMatInputTelComponent
     }
   }
 
+  onPhoneNumberChange(): void {
+    try {
+      this._setCountry();
+    } catch {
+      // Pass a value to trigger the validator error
+      this.value = this.formattedPhoneNumber().toString();
+    }
+
+    this.propagateChange(this.value);
+    this._changeDetectorRef.markForCheck();
+  }
+
   private _setPreferredCountriesInDropDown(countries = this._preferredCountries) {
     this.$preferredCountriesInDropDown.set(this._getFilteredCountries(countries));
   }
@@ -352,18 +364,6 @@ export class NgxMatInputTelComponent
         acc[country.iso2] = country;
         return acc;
       }, {});
-  }
-
-  public onPhoneNumberChange(): void {
-    try {
-      this._setCountry();
-    } catch {
-      // Pass a value to trigger the validator error
-      this.value = this.formattedPhoneNumber().toString();
-    }
-
-    this.propagateChange(this.value);
-    this._changeDetectorRef.markForCheck();
   }
 
   private _setCountry() {
