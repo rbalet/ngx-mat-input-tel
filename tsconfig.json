@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "esModuleInterop": true,
@@ -17,8 +16,9 @@
       "node_modules/@types"
     ],
     "paths": {
-      "ngx-mat-input-tel": ["dist/ngx-mat-input-tel"],
-      "ngx-mat-input-tel/*": ["dist/ngx-mat-input-tel/*"]
+      "projects/*": ["./projects/*"],
+      "ngx-mat-input-tel": ["./dist/ngx-mat-input-tel"],
+      "ngx-mat-input-tel/*": ["./dist/ngx-mat-input-tel/*"]
     }
   },
   "angularCompilerOptions": {
