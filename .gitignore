@@ -9,6 +9,7 @@
 
 # dependencies
 /node_modules
+/projects/ngx-mat-input-tel/node_modules
 .angular
 
 # profiling files

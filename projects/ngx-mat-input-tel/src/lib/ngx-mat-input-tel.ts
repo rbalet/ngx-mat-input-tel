@@ -230,10 +230,12 @@ export class NgxMatInputTelComponent
   }
 
   ngOnInit() {
+    this._initAllCountries();
+
     if (this._onlyCountries.length) {
       this.$availableCountries.set(this._getFilteredCountries(this._onlyCountries));
     } else {
-      this.$availableCountries.set(this._initAllCountries());
+      this.$availableCountries.set(this._allCountries);
     }
 
     this._setPreferredCountriesInDropDown();
