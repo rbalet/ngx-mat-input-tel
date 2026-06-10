@@ -98,6 +98,12 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "testing": {
+              "aot": false,
+              "optimization": false,
+              "extractLicenses": false,
+              "styles": ["projects/demo/src/styles.scss"]
             }
           }
         },
@@ -113,14 +119,13 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "projects/demo/src/test.ts",
             "tsConfig": "projects/demo/tsconfig.spec.json",
-            "karmaConfig": "projects/demo/karma.conf.js",
-            "assets": ["projects/demo/src/favicon.ico", "projects/demo/src/assets"],
-            "styles": ["projects/demo/src/styles.scss"],
-            "scripts": []
+            "reporters": ["default"],
+            "setupFiles": ["projects/demo/src/test.ts"],
+            "buildTarget": ":build:testing",
+            "runner": "vitest"
           }
         },
         "lint": {

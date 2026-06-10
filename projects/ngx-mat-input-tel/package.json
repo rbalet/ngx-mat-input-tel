@@ -14,7 +14,7 @@
     "@angular/forms": ">=19.x",
     "@angular/platform-browser": ">=19.x",
     "@angular/platform-browser-dynamic": ">=19.x",
-    "libphonenumber-js": "^1.12.31"
+    "libphonenumber-js": "^1.13.6"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,8 @@
     "angular",
     "material",
     "ngx-mat-intl-tel-input",
+    "ngx-mat-input-tel",
+    "ngx-tel",
     "intl-tel-input",
     "ng-intl-tel-input",
     "phone number",
