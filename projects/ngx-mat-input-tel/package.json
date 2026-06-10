@@ -1,6 +1,6 @@
 {
   "name": "ngx-mat-input-tel",
-  "version": "21.3.1",
+  "version": "21.4.3",
   "author": {
     "name": "Raphaël Balet",
     "email": "raphael.balet@outlook.com"
@@ -23,8 +23,6 @@
   "keywords": [
     "angular",
     "material",
-    "ng15",
-    "ng16",
     "ngx-mat-intl-tel-input",
     "intl-tel-input",
     "ng-intl-tel-input",
