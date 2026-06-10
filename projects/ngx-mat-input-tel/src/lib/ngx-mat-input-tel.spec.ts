@@ -146,6 +146,20 @@ describe("NgxMatInputTelComponent", () => {
 
       expect(localComponent.$selectedCountry().placeholder).toBeFalsy();
     });
+
+    it("should populate placeholders when onlyCountries is set and enablePlaceholder is true", () => {
+      const localFixture = TestBed.createComponent(NgxMatInputTelComponent);
+      const localComponent = localFixture.componentInstance;
+
+      localComponent.enablePlaceholder = true;
+      localComponent.onlyCountries = ["US", "GB"];
+      localComponent.defaultCountry = "US";
+      localFixture.detectChanges();
+
+      expect(localComponent.$selectedCountry().placeholder).toBeTruthy();
+      expect(localComponent.$availableCountries().US.placeholder).toBeTruthy();
+      expect(localComponent.$availableCountries().GB.placeholder).toBeTruthy();
+    });
   });
 
   describe("Input and Label Bindings", () => {
