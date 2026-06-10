@@ -37,6 +37,6 @@
     [placeholder]="placeholder || ($selectedCountry() | removeIso) || ''"
     [disabled]="disabled"
     #focusable
-    [maxlength]="maxLength"
+    [maxlength]="maxLength ?? null"
   />
 </div>

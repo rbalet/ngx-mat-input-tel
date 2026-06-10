@@ -17,6 +17,8 @@ import {
   Self,
   ViewChild,
   booleanAttribute,
+  effect,
+  model,
   signal,
 } from "@angular/core";
 import {
@@ -108,7 +110,7 @@ export class NgxMatInputTelComponent
   @Input() cssClass?: string;
   @Input() defaultCountry?: CountryCode;
   @Input() errorStateMatcher: ErrorStateMatcher = this._defaultErrorStateMatcher;
-  @Input() maxLength: string | number = 15;
+  @Input() maxLength: string | number | null | undefined = 15;
   @Input() name = "tel";
   @Input() placeholder = "";
 
@@ -195,7 +197,9 @@ export class NgxMatInputTelComponent
   $preferredCountriesInDropDown = signal<Record<string, Country>>({});
   $selectedCountry = signal<Country>({} as Country);
   numberInstance?: PhoneNumber;
-  value?: string | null = null;
+  readonly value = model<string | null>(null);
+  private _internalValue: string | null = null;
+  private _syncingFromModel = false;
 
   private _previousFormattedNumber?: string;
 
@@ -227,6 +231,20 @@ export class NgxMatInputTelComponent
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
+
+    effect(() => {
+      const modelValue = this.value();
+      if (this._syncingFromModel || modelValue === this._internalValue) {
+        return;
+      }
+
+      this._syncingFromModel = true;
+      try {
+        this.writeValue(modelValue);
+      } finally {
+        this._syncingFromModel = false;
+      }
+    });
   }
 
   ngOnInit() {
@@ -326,10 +344,10 @@ export class NgxMatInputTelComponent
       this._setCountry();
     } catch {
       // Pass a value to trigger the validator error
-      this.value = this.formattedPhoneNumber().toString();
+      this._setValue(this.formattedPhoneNumber().toString());
     }
 
-    this.propagateChange(this.value);
+    this.propagateChange(this._internalValue);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -370,7 +388,7 @@ export class NgxMatInputTelComponent
 
   private _setCountry() {
     if (!this.phoneNumber) {
-      this.value = null;
+      this._setValue(null);
       return;
     }
 
@@ -380,15 +398,15 @@ export class NgxMatInputTelComponent
     );
     if (!numberInstance) {
       // Single digit or invalid number
-      this.value = this.phoneNumber.toString();
+      this._setValue(this.phoneNumber.toString());
       return;
     }
     this.numberInstance = numberInstance;
 
     this.formatAsYouTypeIfEnabled();
-    this.value = this.numberInstance?.number;
+    this._setValue(this.numberInstance?.number ?? null);
 
-    if (!this.value) throw new Error("Incorrect phone number");
+    if (!this._internalValue) throw new Error("Incorrect phone number");
 
     if (
       this.numberInstance &&
@@ -542,32 +560,39 @@ export class NgxMatInputTelComponent
   }
 
   writeValue(value: any): void {
-    if (value) {
-      this.numberInstance = parsePhoneNumberFromString(value);
-      if (this.numberInstance) {
-        const countryCode = this.numberInstance.country;
-        this.phoneNumber = this.formattedPhoneNumber();
+    if (value === null || value === undefined || value === "") {
+      this.numberInstance = undefined;
+      this.phoneNumber = "" as E164Number | NationalNumber;
+      this._setValue(null);
+      this.stateChanges.next(undefined);
+      this._changeDetectorRef.markForCheck();
+      return;
+    }
 
-        if (!countryCode) return;
+    this.numberInstance = parsePhoneNumberFromString(value);
+    if (this.numberInstance) {
+      const countryCode = this.numberInstance.country;
+      this.phoneNumber = this.formattedPhoneNumber();
 
-        this.$selectedCountry.set(this.getCountry(countryCode));
+      if (!countryCode) return;
 
-        if (
-          this.$selectedCountry().dialCode &&
-          !this._preferredCountries.includes(this.$selectedCountry().iso2)
-        ) {
-          this.$preferredCountriesInDropDown.update((values) => {
-            return { ...values, ...{ [this.$selectedCountry().iso2]: this.$selectedCountry() } };
-          });
-        }
-        this.countryChanged.emit(this.$selectedCountry());
+      this.$selectedCountry.set(this.getCountry(countryCode));
 
-        // Initial value is set
-        this.stateChanges.next();
-      } else {
-        this.phoneNumber = value;
-        this.stateChanges.next(undefined);
+      if (
+        this.$selectedCountry().dialCode &&
+        !this._preferredCountries.includes(this.$selectedCountry().iso2)
+      ) {
+        this.$preferredCountriesInDropDown.update((values) => {
+          return { ...values, ...{ [this.$selectedCountry().iso2]: this.$selectedCountry() } };
+        });
       }
+      this.countryChanged.emit(this.$selectedCountry());
+
+      // Initial value is set
+      this.stateChanges.next();
+    } else {
+      this.phoneNumber = value;
+      this.stateChanges.next(undefined);
     }
 
     // Value is set from outside using setValue()
@@ -587,6 +612,7 @@ export class NgxMatInputTelComponent
 
   reset() {
     this.phoneNumber = "" as E164Number | NationalNumber;
+    this._setValue(null);
     this.propagateChange(null);
 
     this._changeDetectorRef.markForCheck();
@@ -621,5 +647,12 @@ export class NgxMatInputTelComponent
         | NationalNumber;
     }
     this._previousFormattedNumber = this.phoneNumber.toString();
+  }
+
+  private _setValue(value: string | null) {
+    this._internalValue = value;
+    if (this.value() !== value) {
+      this.value.set(value);
+    }
   }
 }

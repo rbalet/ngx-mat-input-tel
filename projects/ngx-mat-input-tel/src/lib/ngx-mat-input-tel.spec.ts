@@ -1,5 +1,7 @@
 /// <reference types="vitest/globals" />
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { Component, signal } from "@angular/core";
+import { FormField, FormRoot, form } from "@angular/forms/signals";
 import { MatDividerModule } from "@angular/material/divider";
 import { vi } from "vitest";
 
@@ -10,6 +12,19 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatInputModule } from "@angular/material/input";
 import { E164Number, NationalNumber } from "libphonenumber-js";
 import { NgxMatInputTelComponent } from "./ngx-mat-input-tel";
+
+@Component({
+  template: `
+    <form [formRoot]="phoneForm">
+      <ngx-mat-input-tel [formField]="phoneForm.phone"></ngx-mat-input-tel>
+    </form>
+  `,
+  imports: [FormRoot, FormField, NgxMatInputTelComponent],
+})
+class SignalFormsHostComponent {
+  readonly phoneModel = signal<{ phone: string | null }>({ phone: null });
+  readonly phoneForm = form(this.phoneModel);
+}
 
 describe("NgxMatInputTelComponent", () => {
   let component: NgxMatInputTelComponent;
@@ -26,6 +41,7 @@ describe("NgxMatInputTelComponent", () => {
         MatDividerModule,
         ReactiveFormsModule,
         NgxMatInputTelComponent,
+        SignalFormsHostComponent,
       ],
     }).compileComponents();
   });
@@ -218,7 +234,7 @@ describe("NgxMatInputTelComponent", () => {
       component.writeValue("+33123456789");
       fixture.detectChanges();
       expect(component.phoneNumber).toBeTruthy();
-      expect(component.value).toBeTruthy();
+      expect(component.value()).toBeTruthy();
 
       // writeValue with null/undefined/empty triggers onPhoneNumberChange
       // which calls _setCountry. If phoneNumber is cleared manually, value becomes null
@@ -227,7 +243,7 @@ describe("NgxMatInputTelComponent", () => {
       fixture.detectChanges();
 
       // After clearing phoneNumber and calling onPhoneNumberChange, value should be null
-      expect(component.value).toBeNull();
+      expect(component.value()).toBeNull();
     });
 
     it("should register onChange callback", () => {
@@ -313,6 +329,32 @@ describe("NgxMatInputTelComponent", () => {
       vi.spyOn(component["_dialog"], "open");
       component.openCountrySelector();
       expect(component["_dialog"].open).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("Signal Forms integration", () => {
+    it("should bind with [formField] and update the model on input", () => {
+      const hostFixture = TestBed.createComponent(SignalFormsHostComponent);
+      hostFixture.detectChanges();
+
+      const input = hostFixture.nativeElement.querySelector("input");
+      input.value = "+33123456789";
+      input.dispatchEvent(new Event("input"));
+      hostFixture.detectChanges();
+
+      expect(hostFixture.componentInstance.phoneModel().phone).toBe("+33123456789");
+    });
+
+    it("should update the input when signal-form model changes", async () => {
+      const hostFixture = TestBed.createComponent(SignalFormsHostComponent);
+      hostFixture.detectChanges();
+      hostFixture.componentInstance.phoneForm.phone().value.set("+14155552671");
+      hostFixture.detectChanges();
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const input = hostFixture.nativeElement.querySelector("input") as HTMLInputElement;
+      expect(input.value).toBe("4155552671");
     });
   });
 });
