@@ -63,7 +63,7 @@
   <mat-divider></mat-divider>
 
   <form #f2="ngForm" [formGroup]="profileForm" class="second-form">
-    <h2>Required, PlaceHolder & Separated</h2>
+    <h2>Required, PlaceHolder, Separated & OnlyCountries</h2>
 
     <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>Phone</mat-label>
@@ -75,7 +75,6 @@
         [searchPlaceholder]="'Buscar...'"
         [formControl]="profileForm.controls.phone"
         resetOnChange
-        placeholder="Your number"
         enablePlaceholder
         enableSearch
         #phone1
