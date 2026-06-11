@@ -14,7 +14,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgxMatInputTelComponent } from "../../../ngx-mat-input-tel/src/lib/ngx-mat-input-tel";
 import { DialogComponent } from "./dialog/dialog";
 
-interface PhoneForm {
+interface requiredForm {
   phone: FormControl<string | null>;
 }
 
@@ -47,11 +47,11 @@ interface ProfileForm {
 export class AppComponent implements AfterViewInit {
   readonly #matDialog = inject(MatDialog);
 
-  phoneForm = new FormGroup<PhoneForm>({
+  requiredForm = new FormGroup<requiredForm>({
     phone: new FormControl(null, [Validators.required, Validators.maxLength(12)]),
   });
 
-  profileForm = new FormGroup<ProfileForm>({
+  normalForm = new FormGroup<ProfileForm>({
     phone: new FormControl(null),
   });
 
@@ -71,22 +71,22 @@ export class AppComponent implements AfterViewInit {
   }
 
   onSubmit() {
-    this.phoneForm.markAllAsTouched();
+    this.requiredForm.markAllAsTouched();
   }
 
   onReset() {
-    this.phoneForm.reset();
+    this.requiredForm.reset();
   }
 
   ngAfterViewInit() {
-    this.phoneForm.valueChanges.subscribe((value) => {
+    this.requiredForm.valueChanges.subscribe((value) => {
       // Only emitting correct number
-      console.log("phoneForm.valueChanges", value);
+      console.log("requiredForm.valueChanges", value);
     });
 
-    this.profileForm.valueChanges.subscribe((value) => {
+    this.normalForm.valueChanges.subscribe((value) => {
       // Only emitting correct number
-      console.log("phoneForm.valueChanges", value);
+      console.log("requiredForm.valueChanges", value);
     });
   }
 

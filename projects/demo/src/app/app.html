@@ -1,8 +1,8 @@
 <div style="margin: 50px">
-  <h3 id="phoneInput">Test International Telephone Input Form</h3>
+  <h1 id="phoneInput">Test International Telephone Input Form</h1>
   <br />
 
-  <form #f1="ngForm" [formGroup]="phoneForm" (ngSubmit)="onSubmit()">
+  <form #f1="ngForm" [formGroup]="requiredForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <ngx-mat-input-tel
         [cssClass]="'custom'"
@@ -17,15 +17,15 @@
         maxLength="20"
       ></ngx-mat-input-tel>
       <mat-hint>e.g. {{ phone.$selectedCountry().placeholder }}</mat-hint>
-      @if (phoneForm.controls.phone.errors?.required) {
+      @if (requiredForm.controls.phone.errors?.required) {
         <mat-error> Required Field </mat-error>
-      } @else if (phoneForm.controls.phone.errors?.maxlength) {
+      } @else if (requiredForm.controls.phone.errors?.maxlength) {
         <mat-error>
-          Length:{{ phoneForm.controls.phone.errors?.maxlength.actualLength }}/{{
-            phoneForm.controls.phone.errors?.maxlength.requiredLength
+          Length:{{ requiredForm.controls.phone.errors?.maxlength.actualLength }}/{{
+            requiredForm.controls.phone.errors?.maxlength.requiredLength
           }}
         </mat-error>
-      } @else if (f1.submitted && phoneForm.controls.phone.errors?.validatePhoneNumber) {
+      } @else if (f1.submitted && requiredForm.controls.phone.errors?.validatePhoneNumber) {
         <mat-error> Invalid Number </mat-error>
       }
     </mat-form-field>
@@ -39,33 +39,33 @@
   <br />
   <div class="value-container">
     <strong>Is form valid:</strong>
-    <code>{{ phoneForm.valid }}</code>
+    <code>{{ requiredForm.valid }}</code>
   </div>
   <div class="value-container">
     <strong>Is input valid:</strong>
-    <code>{{ !phoneForm.controls.phone.invalid }}</code>
+    <code>{{ !requiredForm.controls.phone.invalid }}</code>
   </div>
   <div class="value-container">
     <strong>Is input touched:</strong>
-    <code>{{ phoneForm.controls.phone.touched }}</code>
+    <code>{{ requiredForm.controls.phone.touched }}</code>
   </div>
   <div class="value-container">
     <strong>Form value:</strong>
-    <pre><code>{{ phoneForm.value | json }}</code></pre>
+    <pre><code>{{ requiredForm.value | json }}</code></pre>
   </div>
   <div class="value-container">
     <strong>Form validation errors:</strong>
-    @for (control of phoneForm.controls | keyvalue; track control) {
+    @for (control of requiredForm.controls | keyvalue; track control) {
       <pre><code> {{ control.key }}: {{ control.value.errors | json }} </code></pre>
     }
   </div>
 
   <mat-divider></mat-divider>
 
-  <form #f2="ngForm" [formGroup]="profileForm" class="second-form">
+  <form #f2="ngForm" class="second-form" [formGroup]="normalForm">
     <h2>Required, PlaceHolder, Separated & OnlyCountries</h2>
 
-    <mat-form-field floatLabel="always" appearance="outline">
+    <mat-form-field floatLabel="always" appearance="outline" class="separated-flag">
       <mat-label>Phone</mat-label>
       <ngx-mat-input-tel
         [cssClass]="'custom'"
@@ -73,20 +73,21 @@
         [countriesName]="frCountriesName"
         [onlyCountries]="$onlyCountries()"
         [searchPlaceholder]="'Buscar...'"
-        [formControl]="profileForm.controls.phone"
+        [formControl]="normalForm.controls.phone"
         resetOnChange
         enablePlaceholder
         enableSearch
+        separateDialCode
         #phone1
       ></ngx-mat-input-tel>
       <mat-hint>e.g. {{ phone1.$selectedCountry().placeholder }}</mat-hint>
-      @if (profileForm.controls.phone.errors?.required) {
+      @if (normalForm.controls.phone.errors?.required) {
         <mat-error> Required Field </mat-error>
       }
-      @if (profileForm.controls.phone.errors?.validatePhoneNumber) {
+      @if (normalForm.controls.phone.errors?.validatePhoneNumber) {
         <mat-error> Invalid Number </mat-error>
       }
-      @if (profileForm.controls.phone.errors?.invalidCountry) {
+      @if (normalForm.controls.phone.errors?.invalidCountry) {
         <mat-error> Country not allowed </mat-error>
       }
     </mat-form-field>
@@ -96,22 +97,6 @@
     <strong>Form value:</strong>
     <pre><code>{{ f2.form.value | json }}</code></pre>
   </div>
-
-  <mat-divider></mat-divider>
-
-  <form [formGroup]="profileForm" class="second-form">
-    <h2>Separated Dial Code</h2>
-
-    <mat-form-field floatLabel="always" appearance="outline" class="separated-flag">
-      <mat-label>Phone</mat-label>
-      <ngx-mat-input-tel
-        resetOnChange
-        placeholder="Your number"
-        enableSearch
-        separateDialCode
-      ></ngx-mat-input-tel>
-    </mat-form-field>
-  </form>
 
   <mat-divider></mat-divider>
 

@@ -21,10 +21,12 @@ This is a fork from the [ngx-mat-intl-tel-input](https://github.com/tanansatpal/
 
 **Supports:**
 
-| Angular | ngx-mat-input-tel |
-| ------- | ----------------- |
-| >= 18   | >= 19.2.0         |
-| >= 15   | < 19.2.0          |
+| Angular | x-mat-input-tel             |
+| ------- | --------------------------- |
+| >= 22   | >= 22.1 (TBD: Signal form)  |
+| >= 22   | >= 19.2.0 (Non Signal form) |
+| >= 18   | >= 19.2.0                   |
+| >= 15   | < 19.2.0                    |
 
 - Validation with [libphonenumber-js](https://github.com/catamphetamine/libphonenumber-js)
 
