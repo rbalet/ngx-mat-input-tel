@@ -9,7 +9,7 @@
     "test": "ng test ngx-mat-input-tel --watch=false",
     "test:ci": "ng test ngx-mat-input-tel --watch=false --coverage",
     "lint": "ng lint",
-    "publish": "ng build ngx-mat-input-tel --configuration production && npm run copy-files && npm publish ./dist/ngx-mat-input-tel --access public",
+    "publish": "ng build ngx-mat-input-tel --configuration production && pnpm run copy-files && pnpm publish ./dist/ngx-mat-input-tel --access public",
     "copy-files": "cp README.md dist/ngx-mat-input-tel && cp LICENSE dist/ngx-mat-input-tel",
     "format": "prettier --write .",
     "prepare": "husky"
