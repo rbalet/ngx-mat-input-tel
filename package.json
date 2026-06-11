@@ -1,6 +1,7 @@
 {
   "name": "ngx-mat-input-tel",
-  "version": "22.0.0",
+  "version": "22.0.1",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
@@ -8,7 +9,7 @@
     "test": "ng test ngx-mat-input-tel --watch=false",
     "test:ci": "ng test ngx-mat-input-tel --watch=false --coverage",
     "lint": "ng lint",
-    "publish": "ng build ngx-mat-input-tel --configuration production && npm run copy-files && npm publish ./dist/ngx-mat-input-tel",
+    "publish": "ng build ngx-mat-input-tel --configuration production && npm run copy-files && npm publish ./dist/ngx-mat-input-tel --access public",
     "copy-files": "cp README.md dist/ngx-mat-input-tel && cp LICENSE dist/ngx-mat-input-tel",
     "format": "prettier --write .",
     "prepare": "husky"
