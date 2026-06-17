@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
+import { FormField, FormRoot, type FieldTree, form, required } from "@angular/forms/signals";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialog } from "@angular/material/dialog";
 import { MatDividerModule } from "@angular/material/divider";
@@ -22,6 +23,10 @@ interface ProfileForm {
   phone: FormControl<string | null>;
 }
 
+interface SignalProfileForm {
+  phone: string | null;
+}
+
 @Component({
   selector: "ngx-root",
   templateUrl: "./app.html",
@@ -30,6 +35,8 @@ interface ProfileForm {
     // Forms
     FormsModule,
     ReactiveFormsModule,
+    FormField,
+    FormRoot,
     MatFormFieldModule,
 
     // Components
@@ -54,6 +61,14 @@ export class AppComponent implements AfterViewInit {
   normalForm = new FormGroup<ProfileForm>({
     phone: new FormControl(null),
   });
+
+  signalProfileModel = signal<SignalProfileForm>({
+    phone: null,
+  });
+  signalProfileForm = form(this.signalProfileModel, (path) => {
+    required(path.phone);
+  });
+  signalProfilePhoneField: FieldTree<string | null> = this.signalProfileForm.phone;
 
   $onlyCountries = signal(["US", "DE"]);
 

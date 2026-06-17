@@ -23,7 +23,7 @@ This is a fork from the [ngx-mat-intl-tel-input](https://github.com/tanansatpal/
 
 | Angular | x-mat-input-tel             |
 | ------- | --------------------------- |
-| >= 22   | >= 22.1 (TBD: Signal form)  |
+| >= 22   | >= 22.1 (Signal form ready) |
 | >= 22   | >= 19.2.0 (Non Signal form) |
 | >= 18   | >= 19.2.0                   |
 | >= 15   | < 19.2.0                    |
@@ -53,6 +53,14 @@ imports: [NgxMatInputTelComponent];
 ## Example
 
 Refer to main app in this repository for working example.
+
+Signal Form usage (Angular 22+):
+
+```html
+<form [formRoot]="phoneSignalForm">
+  <ngx-mat-input-tel [formField]="phoneSignalForm.phone"></ngx-mat-input-tel>
+</form>
+```
 
 ```html
 <form #f="ngForm" [formGroup]="phoneForm">

@@ -100,6 +100,34 @@
 
   <mat-divider></mat-divider>
 
+  <form [formRoot]="signalProfileForm" class="second-form">
+    <h2>Signal FormField binding</h2>
+
+    <mat-form-field floatLabel="always" appearance="outline" class="separated-flag">
+      <mat-label>Phone</mat-label>
+      <ngx-mat-input-tel
+        [formField]="signalProfilePhoneField"
+        enableSearch
+        #signalPhone
+      ></ngx-mat-input-tel>
+      <mat-hint>e.g. {{ signalPhone.$selectedCountry().placeholder }}</mat-hint>
+      @if (signalProfileForm.phone().touched() && signalProfileForm.phone().invalid()) {
+        <mat-error> Invalid Number </mat-error>
+      }
+    </mat-form-field>
+  </form>
+
+  <div class="value-container">
+    <strong>Signal form value:</strong>
+    <pre><code>{{ signalProfileModel() | json }}</code></pre>
+  </div>
+  <div class="value-container">
+    <strong>Signal input touched:</strong>
+    <code>{{ signalProfileForm.phone().touched() }}</code>
+  </div>
+
+  <mat-divider></mat-divider>
+
   <div>
     <h2>Inside a modal</h2>
 

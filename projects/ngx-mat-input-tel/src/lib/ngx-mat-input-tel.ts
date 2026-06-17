@@ -108,7 +108,7 @@ export class NgxMatInputTelComponent
   @Input() cssClass?: string;
   @Input() defaultCountry?: CountryCode;
   @Input() errorStateMatcher: ErrorStateMatcher = this._defaultErrorStateMatcher;
-  @Input() maxLength: string | number = 15;
+  @Input() maxLength: string | number | undefined = 15;
   @Input() name = "tel";
   @Input() placeholder = "";
 
