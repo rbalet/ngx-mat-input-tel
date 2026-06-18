@@ -1,15 +1,32 @@
 /// <reference types="vitest/globals" />
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDividerModule } from "@angular/material/divider";
+import { By } from "@angular/platform-browser";
 import { vi } from "vitest";
 
 import { CommonModule } from "@angular/common";
+import { Component, signal } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormField, FormRoot, type FieldTree, form } from "@angular/forms/signals";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatInputModule } from "@angular/material/input";
 import { E164Number, NationalNumber } from "libphonenumber-js";
 import { NgxMatInputTelComponent } from "./ngx-mat-input-tel";
+
+@Component({
+  template: `
+    <form [formRoot]="signalForm">
+      <ngx-mat-input-tel [formField]="phoneField"></ngx-mat-input-tel>
+    </form>
+  `,
+  imports: [NgxMatInputTelComponent, FormRoot, FormField],
+})
+class SignalFormHostComponent {
+  phoneModel = signal<{ phone: string | null }>({ phone: null });
+  signalForm = form(this.phoneModel);
+  phoneField: FieldTree<string | null> = this.signalForm.phone;
+}
 
 describe("NgxMatInputTelComponent", () => {
   let component: NgxMatInputTelComponent;
@@ -313,6 +330,37 @@ describe("NgxMatInputTelComponent", () => {
       vi.spyOn(component["_dialog"], "open");
       component.openCountrySelector();
       expect(component["_dialog"].open).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("Signal forms integration", () => {
+    let hostFixture: ComponentFixture<SignalFormHostComponent>;
+    let hostComponent: SignalFormHostComponent;
+    let hostInputTel: NgxMatInputTelComponent;
+
+    beforeEach(() => {
+      hostFixture = TestBed.createComponent(SignalFormHostComponent);
+      hostComponent = hostFixture.componentInstance;
+      hostFixture.detectChanges();
+      hostInputTel = hostFixture.debugElement.query(By.directive(NgxMatInputTelComponent))
+        .componentInstance;
+    });
+
+    it("should write signal form value to ngx-mat-input-tel", () => {
+      hostComponent.phoneModel.set({ phone: "+33123456789" });
+      hostFixture.detectChanges();
+
+      expect(hostInputTel.numberInstance?.country).toBe("FR");
+      expect(hostInputTel.phoneNumber).toBeTruthy();
+    });
+
+    it("should propagate ngx-mat-input-tel changes to signal form", () => {
+      const input = hostFixture.nativeElement.querySelector("input");
+      input.value = "+33123456789";
+      input.dispatchEvent(new Event("input"));
+      hostFixture.detectChanges();
+
+      expect(hostComponent.phoneModel().phone).toBe("+33123456789");
     });
   });
 });
