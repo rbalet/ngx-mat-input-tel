@@ -21,8 +21,8 @@
         <mat-error> Required Field </mat-error>
       } @else if (requiredForm.controls.phone.errors?.maxlength) {
         <mat-error>
-          Length:{{ requiredForm.controls.phone.errors?.maxlength.actualLength }}/{{
-            requiredForm.controls.phone.errors?.maxlength.requiredLength
+          Length:{{ requiredForm.controls.phone.errors.maxlength.actualLength }}/{{
+            requiredForm.controls.phone.errors.maxlength.requiredLength
           }}
         </mat-error>
       } @else if (f1.submitted && requiredForm.controls.phone.errors?.validatePhoneNumber) {
@@ -103,7 +103,7 @@
   <form [formRoot]="signalProfileForm" class="second-form">
     <h2>Signal FormField binding</h2>
 
-    <mat-form-field floatLabel="always" appearance="outline" class="separated-flag">
+    <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>Phone</mat-label>
       <ngx-mat-input-tel
         [formField]="signalProfilePhoneField"
