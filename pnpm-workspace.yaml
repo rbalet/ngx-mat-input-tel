@@ -1,25 +1,7 @@
 allowBuilds:
-  '@parcel/watcher': true
+  "@parcel/watcher": true
   esbuild: true
   lmdb: true
   msgpackr-extract: true
-minimumReleaseAgeExclude:
-  - '@angular-devkit/architect@0.2200.1'
-  - '@angular-devkit/core@22.0.1'
-  - '@angular-devkit/schematics@22.0.1'
-  - '@angular/animations@22.0.1'
-  - '@angular/build@22.0.1'
-  - '@angular/cdk@22.0.1'
-  - '@angular/cli@22.0.1'
-  - '@angular/common@22.0.1'
-  - '@angular/compiler-cli@22.0.1'
-  - '@angular/compiler@22.0.1'
-  - '@angular/core@22.0.1'
-  - '@angular/forms@22.0.1'
-  - '@angular/language-service@22.0.1'
-  - '@angular/material@22.0.1'
-  - '@angular/platform-browser-dynamic@22.0.1'
-  - '@angular/platform-browser@22.0.1'
-  - '@angular/router@22.0.1'
-  - '@schematics/angular@22.0.1'
-  - '@types/node@24.13.2'
+overrides:
+  listr2: 10.2.1

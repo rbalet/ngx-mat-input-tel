@@ -1,6 +1,6 @@
 {
   "name": "ngx-mat-input-tel",
-  "version": "22.0.1",
+  "version": "22.0.2",
   "author": {
     "name": "Raphaël Balet",
     "email": "raphael.balet@outlook.com"
@@ -13,8 +13,7 @@
     "@angular/core": ">=19.x",
     "@angular/forms": ">=19.x",
     "@angular/platform-browser": ">=19.x",
-    "@angular/platform-browser-dynamic": ">=19.x",
-    "libphonenumber-js": "^1.13.6"
+    "libphonenumber-js": "^1.13.10"
   },
   "repository": {
     "type": "git",
