@@ -1,6 +1,6 @@
-# International Telephone Input for Angular Material (ngxMatInputTel)
+# ngx-mat-input-tel — Angular Material phone number input
 
-An Angular Material package for entering and validating international telephone numbers. It adds a flag dropdown to any input, detects the user's country, displays a relevant placeholder and provides formatting/validation methods.
+ngx-mat-input-tel is an Angular Material phone number input for entering and validating international telephone numbers. It adds a flag dropdown to any input, detects the user's country, displays a relevant placeholder and provides formatting/validation methods.
 
 [![npm version](https://img.shields.io/npm/v/ngx-mat-input-tel.svg)](https://www.npmjs.com/package/ngx-mat-input-tel)
 ![NPM](https://img.shields.io/npm/l/ngx-mat-input-tel)

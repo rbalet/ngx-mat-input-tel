@@ -1,6 +1,7 @@
 {
   "name": "ngx-mat-input-tel",
   "version": "22.1.1",
+  "description": "Angular Material phone number input with country selection, international formatting, and validation.",
   "author": {
     "name": "Raphaël Balet",
     "email": "raphael.balet@outlook.com"
