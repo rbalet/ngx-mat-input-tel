@@ -6,7 +6,7 @@ export function ngxMatInputTelValidatorFactory(onlyCountries: string[] = []) {
     const error = { validatePhoneNumber: true };
     let numberInstance: PhoneNumber | undefined;
 
-    if (control.value) {
+    if (control.value !== null && control.value !== undefined && control.value !== "") {
       try {
         numberInstance = parsePhoneNumberFromString(control.value);
       } catch (e) {
@@ -14,10 +14,7 @@ export function ngxMatInputTelValidatorFactory(onlyCountries: string[] = []) {
         return error;
       }
 
-      if (control.value?.length <= 1 || (numberInstance && !numberInstance?.isValid())) {
-        if (!control.touched) {
-          control.markAsTouched();
-        }
+      if (!numberInstance || !numberInstance.isValid()) {
         return error;
       }
 

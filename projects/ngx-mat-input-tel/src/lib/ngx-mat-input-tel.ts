@@ -16,6 +16,7 @@ import {
   Output,
   Self,
   ViewChild,
+  afterEveryRender,
   booleanAttribute,
   signal,
 } from "@angular/core";
@@ -96,8 +97,17 @@ export class NgxMatInputTelComponent
   static nextId = 0;
   @ViewChild("focusable", { static: false }) focusable!: ElementRef;
 
-  @HostBinding()
-  id = `ngx-mat-input-tel-${NgxMatInputTelComponent.nextId++}`;
+  private _inputId = `ngx-mat-input-tel-${NgxMatInputTelComponent.nextId++}`;
+  @Input() set inputId(value: string) {
+    this._inputId = value;
+    this.stateChanges.next();
+  }
+  get inputId(): string {
+    return this._inputId;
+  }
+  get id(): string {
+    return this.inputId;
+  }
   @HostBinding("class.ngx-floating")
   get shouldLabelFloat(): boolean {
     return this.focused || !this.empty;
@@ -105,6 +115,8 @@ export class NgxMatInputTelComponent
 
   @Input() autocomplete: "off" | "tel" = "off";
   @Input() ariaLabel = "Select country";
+  @Input() ariaInvalid: boolean | "true" | "false" | null = null;
+  @Input() ariaDescribedBy: string | null = null;
   @Input() cssClass?: string;
   @Input() defaultCountry?: CountryCode;
   @Input() errorStateMatcher: ErrorStateMatcher = this._defaultErrorStateMatcher;
@@ -202,7 +214,7 @@ export class NgxMatInputTelComponent
   onTouched = () => {};
   propagateChange = (_: any) => {};
 
-  private errorState?: boolean;
+  errorState = false;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -227,6 +239,16 @@ export class NgxMatInputTelComponent
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
+
+    // MatInput can overwrite aria-invalid when its internal ngModel updates.
+    afterEveryRender({
+      write: () => {
+        this.focusable.nativeElement.setAttribute(
+          "aria-invalid",
+          String(this.ariaInvalid ?? this.errorState),
+        );
+      },
+    });
   }
 
   ngOnInit() {
@@ -542,14 +564,19 @@ export class NgxMatInputTelComponent
   }
 
   writeValue(value: any): void {
-    if (value) {
-      this.numberInstance = parsePhoneNumberFromString(value);
-      if (this.numberInstance) {
-        const countryCode = this.numberInstance.country;
-        this.phoneNumber = this.formattedPhoneNumber();
+    this.value = value || null;
+    this.phoneNumber = value || "";
+    this.numberInstance = value
+      ? parsePhoneNumberFromString(value, this.$selectedCountry().iso2 as CC)
+      : undefined;
+    this._previousFormattedNumber = undefined;
 
-        if (!countryCode) return;
+    if (this.numberInstance) {
+      this.value = this.numberInstance.number;
+      this.phoneNumber = this.formattedPhoneNumber();
+      const countryCode = this.numberInstance.country;
 
+      if (countryCode) {
         this.$selectedCountry.set(this.getCountry(countryCode));
 
         if (
@@ -561,22 +588,16 @@ export class NgxMatInputTelComponent
           });
         }
         this.countryChanged.emit(this.$selectedCountry());
-
-        // Initial value is set
-        this.stateChanges.next();
-      } else {
-        this.phoneNumber = value;
-        this.stateChanges.next(undefined);
       }
     }
 
-    // Value is set from outside using setValue()
-    this.onPhoneNumberChange();
+    this.stateChanges.next();
     this._changeDetectorRef.markForCheck();
   }
 
   setDescribedByIds(ids: string[]) {
     this.describedBy = ids.join(" ");
+    this._changeDetectorRef.markForCheck();
   }
 
   onContainerClick(event: MouseEvent): void {
@@ -586,11 +607,8 @@ export class NgxMatInputTelComponent
   }
 
   reset() {
-    this.phoneNumber = "" as E164Number | NationalNumber;
+    this.writeValue(null);
     this.propagateChange(null);
-
-    this._changeDetectorRef.markForCheck();
-    this.stateChanges.next(undefined);
   }
 
   private formattedPhoneNumber(): E164Number | NationalNumber {
@@ -617,8 +635,7 @@ export class NgxMatInputTelComponent
 
     if (this.phoneNumber?.toString().startsWith(this._previousFormattedNumber || "")) {
       this.phoneNumber = asYouType.input(this.phoneNumber.toString()) as
-        | E164Number
-        | NationalNumber;
+        E164Number | NationalNumber;
     }
     this._previousFormattedNumber = this.phoneNumber.toString();
   }

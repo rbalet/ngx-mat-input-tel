@@ -69,7 +69,7 @@ Signal Form usage (Angular 22+):
     [enablePlaceholder]="true"
     [enableSearch]="true"
     name="phone"
-    describedBy="phoneInput"
+    ariaDescribedBy="phoneInput"
     formControlName="phone"
   ></ngx-mat-input-tel>
 </form>
@@ -113,27 +113,55 @@ If you want to show the sample number for the country selected or errors, use ma
 </form>
 ```
 
+### Native input accessibility
+
+Use `inputId` to link a label to the telephone input. `required`, `ariaInvalid`, and
+`ariaDescribedBy` apply to that same native input:
+
+```html
+<label for="contact-phone">Phone</label>
+<ngx-mat-input-tel
+  inputId="contact-phone"
+  [formControl]="phoneControl"
+  required
+  [ariaInvalid]="phoneControl.invalid && phoneControl.touched"
+  ariaDescribedBy="phone-help"
+></ngx-mat-input-tel>
+<p id="phone-help">Include the country code.</p>
+```
+
+Inside `mat-form-field`, its label targets `inputId`, and its hint/error IDs are combined
+with `ariaDescribedBy`. Leave `ariaInvalid` unset to use the component's `ErrorStateMatcher`.
+The generated ID now belongs to the native input rather than the component host.
+
+Programmatic form writes update the display without emitting a user change. Writing `null`,
+`undefined`, or `''` clears the input.
+
 ## Inputs
 
-| Options            | Type                      | Default          | Description                                                                                                    |
-| ------------------ | ------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------- |
-| ariaLabel          | `string`                  | `Select country` | Aria label for the country selector button                                                                     |
-| autocomplete       | `off` \| `tel`            | `off`            | For input autocompletion                                                                                       |
-| cssClass           | `string`                  | `undefined`      | If input custom class are needed                                                                               |
-| countriesName      | `Record<string, string>`  | `COUNTRIES_NAME` | For using different country names in the dropdown (Eg. Multilingual website)                                   |
-| defaultCountry     | `CountryCode`             | `undefined`      | Default country code                                                                                           |
-| enablePlaceholder  | `boolean`                 | `false`          | Input placeholder text, which adapts to the country selected.                                                  |
-| enableSearch       | `boolean`                 | `false`          | Whether to display a search bar to help filter down the list of countries                                      |
-| format             | `string` \*\*\*\*         | `default`        | Format of "as you type" input. Possible values: national, international, default                               |
-| hideAreaCodes      | `boolean`                 | `false`          | Hide the Area codes in the country dropdown selection                                                          |
-| maxLength          | `number`                  | `15`             | max length of the input.                                                                                       |
-| onlyCountries      | `string[]`                | `[]`             | List of manually selected country abbreviations, which will appear in the dropdown.                            |
-| placeholder        | `string`                  | `undefined`      | Placeholder for the input component.                                                                           |
-| preferredCountries | `string[]`                | `[]`             | List of country abbreviations, which will appear at the top.                                                   |
-| resetOnChange      | `boolean`                 | `false`          | Reset input on country change                                                                                  |
-| searchPlaceholder  | `string`                  | `Search ...`     | Placeholder for the search input                                                                               |
-| validation         | `isPossible` \| `isValid` | `isValid`        | Change the validation type                                                                                     |
-| separateDialCode   | `boolean`                 | `false`          | Whether to separate the dial code from the input _Note: you'll have to manually add margin-left to your input_ |
+| Options            | Type                                         | Default             | Description                                                                                                    |
+| ------------------ | -------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------- |
+| ariaLabel          | `string`                                     | `Select country`    | Aria label for the country selector button                                                                     |
+| ariaInvalid        | `boolean` \| `'true'` \| `'false'` \| `null` | `null`              | Native `aria-invalid`; defaults to the component error state                                                   |
+| ariaDescribedBy    | `string` \| `null`                           | `null`              | Native description IDs, combined with Material hint/error IDs                                                  |
+| autocomplete       | `off` \| `tel`                               | `off`               | For input autocompletion                                                                                       |
+| cssClass           | `string`                                     | `undefined`         | If input custom class are needed                                                                               |
+| countriesName      | `Record<string, string>`                     | `COUNTRIES_NAME`    | For using different country names in the dropdown (Eg. Multilingual website)                                   |
+| defaultCountry     | `CountryCode`                                | `undefined`         | Default country code                                                                                           |
+| enablePlaceholder  | `boolean`                                    | `false`             | Input placeholder text, which adapts to the country selected.                                                  |
+| enableSearch       | `boolean`                                    | `false`             | Whether to display a search bar to help filter down the list of countries                                      |
+| format             | `string` \*\*\*\*                            | `default`           | Format of "as you type" input. Possible values: national, international, default                               |
+| hideAreaCodes      | `boolean`                                    | `false`             | Hide the Area codes in the country dropdown selection                                                          |
+| inputId            | `string`                                     | Generated unique ID | ID of the native telephone input, used by labels                                                               |
+| maxLength          | `number`                                     | `15`                | max length of the input.                                                                                       |
+| onlyCountries      | `string[]`                                   | `[]`                | List of manually selected country abbreviations, which will appear in the dropdown.                            |
+| placeholder        | `string`                                     | `undefined`         | Placeholder for the input component.                                                                           |
+| preferredCountries | `string[]`                                   | `[]`                | List of country abbreviations, which will appear at the top.                                                   |
+| resetOnChange      | `boolean`                                    | `false`             | Reset input on country change                                                                                  |
+| required           | `boolean`                                    | `false`             | Native required state and `aria-required`                                                                      |
+| searchPlaceholder  | `string`                                     | `Search ...`        | Placeholder for the search input                                                                               |
+| validation         | `isPossible` \| `isValid`                    | `isValid`           | Change the validation type                                                                                     |
+| separateDialCode   | `boolean`                                    | `false`             | Whether to separate the dial code from the input _Note: you'll have to manually add margin-left to your input_ |
 
 ## Outputs
 
@@ -153,6 +181,10 @@ If you want to show the sample number for the country selected or errors, use ma
 | `--ngxMatInputTel-gap`                 | `32px`         | If you wish to change the gap between the flag and the input field (Only works with `separateDialCode`) |
 
 ## Validator
+
+Nonempty values must parse as valid phone numbers; unparseable values return
+`{ validatePhoneNumber: true }`. Empty values remain optional unless `Validators.required`
+is supplied. Validation does not change the control's touched state.
 
 #### Manual validator usage
 

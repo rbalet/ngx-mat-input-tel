@@ -6,10 +6,11 @@ import { vi } from "vitest";
 
 import { CommonModule } from "@angular/common";
 import { Component, signal } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FormField, FormRoot, type FieldTree, form } from "@angular/forms/signals";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { E164Number, NationalNumber } from "libphonenumber-js";
 import { NgxMatInputTelComponent } from "./ngx-mat-input-tel";
@@ -26,6 +27,39 @@ class SignalFormHostComponent {
   phoneModel = signal<{ phone: string | null }>({ phone: null });
   signalForm = form(this.phoneModel);
   phoneField: FieldTree<string | null> = this.signalForm.phone;
+}
+
+@Component({
+  template: `<ngx-mat-input-tel [formControl]="phone" format="international" />`,
+  imports: [NgxMatInputTelComponent, ReactiveFormsModule],
+})
+class ReactiveFormHostComponent {
+  phone = new FormControl<string | null>(null);
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-label>Phone</mat-label>
+      <ngx-mat-input-tel
+        [formControl]="phone"
+        [inputId]="inputId()"
+        [required]="required()"
+        [ariaInvalid]="invalid()"
+        [ariaDescribedBy]="description()"
+      />
+      <mat-hint id="phone-hint">Include the country code</mat-hint>
+      <mat-error id="phone-error">Invalid number</mat-error>
+    </mat-form-field>
+  `,
+  imports: [NgxMatInputTelComponent, ReactiveFormsModule, MatFormFieldModule],
+})
+class AccessibleFormHostComponent {
+  phone = new FormControl<string | null>(null);
+  inputId = signal("contact-phone");
+  required = signal(true);
+  invalid = signal<boolean | null>(null);
+  description = signal<string | null>("contact-help");
 }
 
 describe("NgxMatInputTelComponent", () => {
@@ -208,6 +242,81 @@ describe("NgxMatInputTelComponent", () => {
       // Verify the property is set on the component
       expect(component.ariaLabel).toBe(customLabel);
     });
+
+    it("should forward native attributes and update the Material label", async () => {
+      const host = TestBed.createComponent(AccessibleFormHostComponent);
+      await host.whenStable();
+      const input: HTMLInputElement = host.nativeElement.querySelector("input");
+      const label: HTMLLabelElement = host.nativeElement.querySelector("label");
+
+      expect(input.id).toBe("contact-phone");
+      expect(label.control).toBe(input);
+      expect(input.required).toBe(true);
+      expect(input.getAttribute("aria-required")).toBe("true");
+      expect(input.getAttribute("aria-invalid")).toBe("false");
+      expect(input.getAttribute("aria-describedby")).toBe("contact-help phone-hint");
+      expect(host.nativeElement.querySelectorAll("#contact-phone")).toHaveLength(1);
+
+      host.componentInstance.inputId.set("updated-phone");
+      await host.whenStable();
+
+      expect(input.id).toBe("updated-phone");
+      expect(label.control).toBe(input);
+
+      host.componentInstance.required.set(false);
+      host.componentInstance.invalid.set(true);
+      host.componentInstance.description.set("external-error");
+      await host.whenStable();
+
+      expect(input.required).toBe(false);
+      expect(input.getAttribute("aria-required")).toBe("false");
+      expect(input.getAttribute("aria-invalid")).toBe("true");
+      expect(input.getAttribute("aria-describedby")).toBe("external-error phone-hint");
+
+      host.componentInstance.description.set(null);
+      host.componentInstance.invalid.set(false);
+      await host.whenStable();
+
+      expect(input.getAttribute("aria-invalid")).toBe("false");
+      expect(input.getAttribute("aria-describedby")).toBe("phone-hint");
+    });
+
+    it("should connect Material errors and their invalid state to the native input", async () => {
+      const host = TestBed.createComponent(AccessibleFormHostComponent);
+      await host.whenStable();
+      host.componentInstance.phone.setErrors({ validatePhoneNumber: true });
+      host.componentInstance.phone.markAsTouched();
+      host.changeDetectorRef.markForCheck();
+      await host.whenStable();
+      const input: HTMLInputElement = host.nativeElement.querySelector("input");
+
+      expect(input.getAttribute("aria-invalid")).toBe("true");
+      expect(input.getAttribute("aria-describedby")).toBe("contact-help phone-error");
+    });
+
+    it("should remove optional descriptions outside a Material form field", async () => {
+      fixture.componentRef.setInput("ariaDescribedBy", "phone-help");
+      await fixture.whenStable();
+      const input: HTMLInputElement = fixture.nativeElement.querySelector("input");
+      expect(input.getAttribute("aria-describedby")).toBe("phone-help");
+
+      fixture.componentRef.setInput("ariaDescribedBy", null);
+      await fixture.whenStable();
+      expect(input.hasAttribute("aria-describedby")).toBe(false);
+    });
+
+    it.each([true, false])(
+      "should honor initial ariaInvalid=%s on a required input",
+      async (invalid) => {
+        const host = TestBed.createComponent(AccessibleFormHostComponent);
+        host.componentInstance.invalid.set(invalid);
+        await host.whenStable();
+
+        expect(host.nativeElement.querySelector("input").getAttribute("aria-invalid")).toBe(
+          String(invalid),
+        );
+      },
+    );
   });
 
   describe("ControlValueAccessor Implementation", () => {
@@ -230,21 +339,65 @@ describe("NgxMatInputTelComponent", () => {
       expect(component.numberInstance).toBeTruthy();
     });
 
-    it("should handle empty value in writeValue", () => {
-      // First set a value
+    it.each([null, undefined, ""])("should clear the display on writeValue(%s)", async (value) => {
       component.writeValue("+33123456789");
-      fixture.detectChanges();
-      expect(component.phoneNumber).toBeTruthy();
-      expect(component.value).toBeTruthy();
+      await fixture.whenStable();
+      const onChange = vi.fn();
+      const onTouched = vi.fn();
+      component.registerOnChange(onChange);
+      component.registerOnTouched(onTouched);
 
-      // writeValue with null/undefined/empty triggers onPhoneNumberChange
-      // which calls _setCountry. If phoneNumber is cleared manually, value becomes null
-      component.phoneNumber = "" as E164Number | NationalNumber;
-      component.onPhoneNumberChange();
-      fixture.detectChanges();
+      component.writeValue(value);
+      await fixture.whenStable();
 
-      // After clearing phoneNumber and calling onPhoneNumberChange, value should be null
+      expect(fixture.nativeElement.querySelector("input").value).toBe("");
+      expect(component.numberInstance).toBeUndefined();
       expect(component.value).toBeNull();
+      expect(onChange).not.toHaveBeenCalled();
+      expect(onTouched).not.toHaveBeenCalled();
+    });
+
+    it.each(["+33123456789", "+80012345678", "not a phone"])(
+      "should write %s without calling onChange or onTouched",
+      async (value) => {
+        const onChange = vi.fn();
+        const onTouched = vi.fn();
+        component.registerOnChange(onChange);
+        component.registerOnTouched(onTouched);
+
+        component.writeValue(value);
+        await fixture.whenStable();
+
+        expect(fixture.nativeElement.querySelector("input").value).toBe(component.phoneNumber);
+        expect(component.value).toBe(value);
+        expect(onChange).not.toHaveBeenCalled();
+        expect(onTouched).not.toHaveBeenCalled();
+      },
+    );
+
+    it("should update reactive forms silently and clear on reset", async () => {
+      const host = TestBed.createComponent(ReactiveFormHostComponent);
+      await host.whenStable();
+      const control = host.componentInstance.phone;
+      const changes = vi.fn();
+      control.valueChanges.subscribe(changes);
+
+      control.setValue("+33123456789", { emitEvent: false });
+      await host.whenStable();
+
+      expect(host.nativeElement.querySelector("input").value).toBe("+33 1 23 45 67 89");
+      expect(changes).not.toHaveBeenCalled();
+      expect(control.pristine).toBe(true);
+      expect(control.untouched).toBe(true);
+
+      control.reset(null, { emitEvent: false });
+      await host.whenStable();
+
+      expect(host.nativeElement.querySelector("input").value).toBe("");
+      expect(control.value).toBeNull();
+      expect(changes).not.toHaveBeenCalled();
+      expect(control.pristine).toBe(true);
+      expect(control.untouched).toBe(true);
     });
 
     it("should register onChange callback", () => {
@@ -255,6 +408,40 @@ describe("NgxMatInputTelComponent", () => {
       component.onPhoneNumberChange();
 
       expect(mockCallback).toHaveBeenCalled();
+    });
+
+    it("should parse a national write using the selected country", async () => {
+      component.writeValue("+33123456789");
+      component.writeValue("01 23 45 67 89");
+      await fixture.whenStable();
+
+      expect(component.value).toBe("+33123456789");
+      expect(component.$selectedCountry().iso2).toBe("FR");
+      expect(fixture.nativeElement.querySelector("input").value).toBe("123456789");
+    });
+
+    it("should keep an unparseable write visible after a valid number", async () => {
+      component.writeValue("+33123456789");
+      component.writeValue("not a phone");
+      fixture.componentRef.setInput("format", "international");
+      await fixture.whenStable();
+
+      expect(component.numberInstance).toBeUndefined();
+      expect(fixture.nativeElement.querySelector("input").value).toBe("not a phone");
+    });
+
+    it("should clear parsed state and emit once on an explicit reset", async () => {
+      component.writeValue("+33123456789");
+      const onChange = vi.fn();
+      component.registerOnChange(onChange);
+
+      component.reset();
+      fixture.componentRef.setInput("format", "international");
+      await fixture.whenStable();
+
+      expect(fixture.nativeElement.querySelector("input").value).toBe("");
+      expect(component.numberInstance).toBeUndefined();
+      expect(onChange).toHaveBeenCalledExactlyOnceWith(null);
     });
 
     it("should call onChange when user types in input", () => {
@@ -342,8 +529,9 @@ describe("NgxMatInputTelComponent", () => {
       hostFixture = TestBed.createComponent(SignalFormHostComponent);
       hostComponent = hostFixture.componentInstance;
       hostFixture.detectChanges();
-      hostInputTel = hostFixture.debugElement.query(By.directive(NgxMatInputTelComponent))
-        .componentInstance;
+      hostInputTel = hostFixture.debugElement.query(
+        By.directive(NgxMatInputTelComponent),
+      ).componentInstance;
     });
 
     it("should write signal form value to ngx-mat-input-tel", () => {
@@ -361,6 +549,16 @@ describe("NgxMatInputTelComponent", () => {
       hostFixture.detectChanges();
 
       expect(hostComponent.phoneModel().phone).toBe("+33123456789");
+    });
+
+    it("should clear the input when the signal model is cleared", async () => {
+      hostComponent.phoneModel.set({ phone: "+33123456789" });
+      await hostFixture.whenStable();
+      hostComponent.phoneModel.set({ phone: null });
+      await hostFixture.whenStable();
+
+      expect(hostFixture.nativeElement.querySelector("input").value).toBe("");
+      expect(hostComponent.phoneModel().phone).toBeNull();
     });
   });
 });
