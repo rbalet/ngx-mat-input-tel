@@ -25,6 +25,11 @@
     matInput
     type="tel"
     inputmode="tel"
+    [id]="inputId"
+    [required]="required"
+    [attr.aria-required]="required"
+    [attr.aria-invalid]="ariaInvalid ?? errorState"
+    [attr.aria-describedby]="((ariaDescribedBy || '') + ' ' + describedBy).trim() || null"
     [name]="name || 'tel'"
     [autocomplete]="autocomplete"
     [ngClass]="cssClass"
