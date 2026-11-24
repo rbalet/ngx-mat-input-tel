@@ -13,7 +13,7 @@ ngx-mat-input-tel is an Angular Material phone number input for entering and val
 
 ## Demo
 
-- https://stackblitz.com/~/github.com/rbalet/ngx-mat-input-tel
+- [Open the demo in StackBlitz](https://stackblitz.com/github/rbalet/ngx-mat-input-tel)
 
 ## Caution
 
