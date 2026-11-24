@@ -1,0 +1,4 @@
+{
+  "installDependencies": false,
+  "startCommand": "npx --yes --package=pnpm@11.28.1 pnpm --pm-on-fail=ignore install --frozen-lockfile --ignore-scripts && npm install --prefix /tmp/ngx-esbuild --no-save esbuild-wasm@0.28.1 && ESBUILD_BINARY_PATH=/tmp/ngx-esbuild/node_modules/esbuild-wasm/bin/esbuild node node_modules/@angular/cli/bin/ng.js serve"
+}
